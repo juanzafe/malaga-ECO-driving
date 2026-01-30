@@ -28,7 +28,7 @@ function App() {
           </div>
 
           <a
-            href="https://www.malaga.eu/recursos/ayuntamiento/ordenanzas/doc/Ordenanza_de_Movilidad_Sostenible.pdf"
+            href="https://share.google/vwqs4NhY5conk1T0m"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 bg-white/20 backdrop-blur px-5 py-2.5 rounded-full text-xs font-bold text-white uppercase tracking-wider hover:bg-white/30 transition"
