@@ -1,10 +1,9 @@
-import { MapContainer, TileLayer, Polygon, Marker, Tooltip, useMap } from 'react-leaflet';
-import type { LatLngTuple, Control } from 'leaflet';
-import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
-import { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, Polygon, Marker, Tooltip } from 'react-leaflet';
+import type { LatLngTuple } from 'leaflet';
+import { useState } from 'react';
 import L from 'leaflet';
+import type { Badge } from './VehicleChecker';
 
-import 'leaflet-geosearch/dist/geosearch.css';
 import 'leaflet/dist/leaflet.css';
 
 /* ================= ICONOS ================= */
@@ -22,15 +21,7 @@ L.Marker.prototype.options.icon = DefaultIcon;
 /* ================= TIPOS ================= */
 type ZoneType = 'ZONA1' | 'ZONA2';
 
-interface SearchEvent {
-  location: {
-    x: number;
-    y: number;
-    label: string;
-  };
-}
-
-/* ================= POLÍGONOS ZBE MÁLAGA ================= */
+/* ================= POLÍGONOS ZBE ================= */
 const POLY_ZONA_1: LatLngTuple[] = [
   [36.7214, -4.4215], [36.7230, -4.4165], [36.7255, -4.4175],
   [36.7285, -4.4210], [36.7290, -4.4245], [36.7275, -4.4275],
@@ -50,84 +41,39 @@ const isPointInPolygon = (point: LatLngTuple, vs: LatLngTuple[]) => {
   for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
     const xi = vs[i][0], yi = vs[i][1];
     const xj = vs[j][0], yj = vs[j][1];
-    const intersect =
-      yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+    const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
     if (intersect) inside = !inside;
   }
   return inside;
 };
 
-/* ================= SEARCH ================= */
-const SearchField = ({ onFound }: { onFound: (coords: LatLngTuple, label: string) => void }) => {
-  const map = useMap();
-
-  useEffect(() => {
-    const provider = new OpenStreetMapProvider({
-      params: { 'accept-language': 'es', countrycodes: 'es' },
-    });
-
-    // Tipado del constructor corregido para evitar "defined but never used"
-    const SearchControl = GeoSearchControl as unknown as new (...args: unknown[]) => Control;
-
-    const control = new SearchControl({
-      provider,
-      style: 'bar',
-      showMarker: false,
-      autoClose: true,
-      searchLabel: 'Busca una calle de Málaga…',
-      keepResult: true,
-    });
-
-    map.addControl(control);
-
-    const handleLocation = (e: unknown) => {
-      const event = e as SearchEvent;
-      onFound([event.location.y, event.location.x], event.location.label);
-    };
-
-    map.on('geosearch/showlocation', handleLocation);
-
-    return () => {
-      map.removeControl(control);
-      map.off('geosearch/showlocation', handleLocation);
-    };
-  }, [map, onFound]);
-
-  return null;
-};
-
 /* ================= MAIN ================= */
-export const ZbeMap = ({ isFuture, userLabel }: { isFuture: boolean; userLabel: string | null }) => {
-  const [searched, setSearched] = useState<{ coords: LatLngTuple; address: string } | null>(null);
+export const ZbeMap = ({
+  isFuture,
+  userLabel,
+  externalSearch,
+}: {
+  isFuture: boolean;
+  userLabel: Badge;
+  externalSearch?: { coords: [number, number]; address: string } | null;
+}) => {
   const [hovered, setHovered] = useState<ZoneType | null>(null);
 
-const getStatus = (zone: ZoneType) => {
+  const searched = externalSearch ?? null;
+
+  const getZoneStatus = (zone: ZoneType) => {
     if (!userLabel) return { text: 'Selecciona tu etiqueta', color: '#64748b', icon: '🔍' };
+    if (userLabel === 'SIN') return { text: 'Prohibido', color: '#dc2626', icon: '⛔' };
+    if (userLabel === 'CERO' || userLabel === 'ECO') return { text: 'Libre', color: '#16a34a', icon: '✅' };
 
-    // 1. SIN ETIQUETA: Prohibido en ambas zonas
-    if (userLabel === 'SIN')
-      return { text: 'Acceso prohibido (no residentes)', color: '#dc2626', icon: '⛔' };
+    if (userLabel === 'C') {
+      if (isFuture && zone === 'ZONA1') return { text: 'Parking obligatorio', color: '#eab308', icon: '🅿️' };
+      return { text: 'Libre', color: '#16a34a', icon: '✅' };
+    }
 
-    // 2. CERO Y ECO: Libre en ambas zonas
-    if (userLabel === 'CERO' || userLabel === 'ECO')
-      return { text: 'Acceso libre', color: '#16a34a', icon: '✅' };
-
-    // 3. ETIQUETA B Y C: Aquí es donde usamos la variable 'zone'
-    if (userLabel === 'B' || userLabel === 'C') {
-      if (isFuture) {
-        // En el CENTRO (ZONA1) siempre es Parking
-        if (zone === 'ZONA1') {
-          return { text: 'Futuro: Parking obligatorio', color: '#eab308', icon: '🅿️' };
-        }
-        // En el EXTERIOR (ZONA2) depende de si es B o C
-        if (userLabel === 'B') {
-          return { text: 'Fase 2026: Restricción progresiva', color: '#f97316', icon: '⚠️' };
-        }
-        return { text: 'Fase 2027: Parking obligatorio', color: '#eab308', icon: '🅿️' };
-      }
-      
-      // Actualidad: En Málaga hoy, B y C son libres (usamos zone para confirmar)
-      return { text: `Acceso libre a ${zone === 'ZONA1' ? 'Centro' : 'Anillo'}`, color: '#16a34a', icon: '✅' };
+    if (userLabel === 'B') {
+      if (isFuture) return { text: 'Prohibido (solo residentes)', color: '#dc2626', icon: '🚫' };
+      return { text: 'Libre con advertencia', color: '#f97316', icon: '⚠️' };
     }
 
     return { text: 'Acceso permitido', color: '#16a34a', icon: '✅' };
@@ -141,40 +87,47 @@ const getStatus = (zone: ZoneType) => {
       : { zone: null, name: 'Fuera de ZBE' }
     : null;
 
+  /* Determina si pintar cada zona o dejarla neutra */
+  const shouldPaintZone = (zone: ZoneType) => {
+    if (!searched) return false; // Sin búsqueda no pintamos
+    if (zoneResult?.zone === zone) return true;
+    return false;
+  };
+
   return (
     <div className="relative w-full h-150 rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
 
-      {/* INFO PANEL */}
-      <div className="absolute top-4 right-4 z-1000 bg-white/95 backdrop-blur rounded-2xl shadow-xl p-4 min-w-60">
+      {/* PANEL DE RESULTADO */}
+      <div className="absolute top-4 right-4 z-50 bg-white/95 backdrop-blur rounded-2xl shadow-xl p-4 min-w-60">
         {searched && zoneResult ? (
           <>
             <p className="text-[10px] uppercase font-black text-slate-400 mb-1">Resultado</p>
             <p className="font-bold text-sm">{zoneResult.name}</p>
             {zoneResult.zone ? (
               <p className="text-xs font-semibold flex gap-2 items-center"
-                 style={{ color: getStatus(zoneResult.zone).color }}>
-                {getStatus(zoneResult.zone).icon} {getStatus(zoneResult.zone).text}
+                 style={{ color: getZoneStatus(zoneResult.zone).color }}>
+                {getZoneStatus(zoneResult.zone).icon} {getZoneStatus(zoneResult.zone).text}
               </p>
             ) : (
               <p className="text-xs text-slate-600 flex gap-2 items-center">
-                🌍 Zona sin restricciones ZBE
+                🌍 Fuera de ZBE
               </p>
             )}
           </>
         ) : (
-          <p className="text-xs font-bold text-slate-600">🔍 Busca una calle para analizar</p>
+          <p className="text-xs font-bold text-slate-600">🔍 Busca una calle arriba para analizar</p>
         )}
       </div>
 
       <MapContainer center={[36.7213, -4.4215]} zoom={14} className="h-full w-full" zoomControl={false}>
         <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
-        <SearchField onFound={(c, a) => setSearched({ coords: c, address: a })} />
 
+        {/* POLÍGONOS DINÁMICOS */}
         <Polygon
           positions={POLY_ZONA_2}
           eventHandlers={{ mouseover: () => setHovered('ZONA2'), mouseout: () => setHovered(null) }}
           pathOptions={{
-            fillColor: getStatus('ZONA2').color,
+            fillColor: shouldPaintZone('ZONA2') ? getZoneStatus('ZONA2').color : '#94a3b8', // gris neutro
             fillOpacity: hovered === 'ZONA2' ? 0.35 : 0.22,
             color: '#1e293b',
             weight: hovered === 'ZONA2' ? 3 : 1,
@@ -182,7 +135,7 @@ const getStatus = (zone: ZoneType) => {
           }}
         >
           <Tooltip sticky>
-            <b>Anillo Exterior</b><br />{getStatus('ZONA2').text}
+            <b>Anillo Exterior</b><br />{getZoneStatus('ZONA2').text}
           </Tooltip>
         </Polygon>
 
@@ -190,17 +143,18 @@ const getStatus = (zone: ZoneType) => {
           positions={POLY_ZONA_1}
           eventHandlers={{ mouseover: () => setHovered('ZONA1'), mouseout: () => setHovered(null) }}
           pathOptions={{
-            fillColor: getStatus('ZONA1').color,
+            fillColor: shouldPaintZone('ZONA1') ? getZoneStatus('ZONA1').color : '#94a3b8',
             fillOpacity: hovered === 'ZONA1' ? 0.55 : 0.4,
             color: '#0f172a',
             weight: hovered === 'ZONA1' ? 3 : 2,
           }}
         >
           <Tooltip sticky>
-            <b>Centro Histórico</b><br />{getStatus('ZONA1').text}
+            <b>Centro Histórico</b><br />{getZoneStatus('ZONA1').text}
           </Tooltip>
         </Polygon>
 
+        {/* MARKER DE BÚSQUEDA */}
         {searched && (
           <Marker position={searched.coords}>
             <Tooltip permanent direction="top" className="font-bold bg-white p-2 rounded-xl shadow">

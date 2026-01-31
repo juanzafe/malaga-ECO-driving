@@ -2,14 +2,19 @@ import 'leaflet/dist/leaflet.css';
 import { useState } from 'react';
 import { VehicleChecker, type Badge } from './components/VehicleChecker';
 import { ZbeMap } from './components/ZbeMap';
+import { StreetSearch } from './components/StreetSearch';
 
 function App() {
   const [isFuture, setIsFuture] = useState(false);
-  const [currentBadge, setCurrentBadge] = useState<Badge | null>(null);
+  const [currentBadge, setCurrentBadge] = useState<Badge>(null);
+  const [searchedLocation, setSearchedLocation] = useState<{
+    coords: [number, number];
+    address: string;
+  } | null>(null);
 
   return (
     <div className="min-h-screen bg-linear-to-br from-emerald-50 via-teal-50 to-cyan-50 font-['Inter',sans-serif] text-slate-900 pb-24">
-      
+
       {/* NAVBAR */}
       <nav className="sticky top-0 z-50 bg-linear-to-r from-emerald-600 via-green-600 to-teal-600 shadow-lg">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -27,55 +32,49 @@ function App() {
             </div>
           </div>
 
-          <a
-            href="https://share.google/vwqs4NhY5conk1T0m"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-white/20 backdrop-blur px-5 py-2.5 rounded-full text-xs font-bold text-white uppercase tracking-wider hover:bg-white/30 transition"
-          >
-            📄 Normativa PDF
-          </a>
+          <div className="flex items-center gap-4">
+            {/* TOGGLE */}
+            <div className="flex items-center gap-3 bg-white/20 backdrop-blur px-4 py-2.5 rounded-full">
+              <span className={`text-sm font-bold transition ${!isFuture ? 'text-white' : 'text-white/50'}`}>
+                Hoy
+              </span>
+              <button
+                onClick={() => setIsFuture(!isFuture)}
+                className={`relative w-14 h-7 rounded-full transition-all duration-300 ${
+                  isFuture ? 'bg-blue-400' : 'bg-white/40'
+                }`}
+              >
+                <div
+                  className={`absolute top-0.5 w-6 h-6 bg-white rounded-full shadow-md transition-transform ${
+                    isFuture ? 'translate-x-7' : 'translate-x-0.5'
+                  }`}
+                />
+              </button>
+              <span className={`text-sm font-bold transition ${isFuture ? 'text-white' : 'text-white/50'}`}>
+                2027
+              </span>
+            </div>
+
+            <a
+              href="https://share.google/vwqs4NhY5conk1T0m"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-white/20 backdrop-blur px-5 py-2.5 rounded-full text-xs font-bold text-white uppercase tracking-wider hover:bg-white/30 transition"
+            >
+              📄 Normativa PDF
+            </a>
+          </div>
         </div>
       </nav>
 
       {/* HERO */}
-      <section className="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-8">
-        <div>
-          <h2 className="text-4xl md:text-5xl font-black bg-linear-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-            Estado de la ZBE Málaga
-          </h2>
-          <p className="text-slate-600 mt-3 text-lg">
-            Consulta si puedes circular y evita multas innecesarias 🚗
-          </p>
-        </div>
-
-        {/* TOGGLE */}
-        <div className="flex items-center gap-4 bg-white/70 backdrop-blur p-4 rounded-3xl border border-emerald-200 shadow-xl">
-          <span className={`text-sm font-bold ${!isFuture ? 'text-emerald-600 scale-110' : 'text-slate-400'}`}>
-            🌞 Hoy
-          </span>
-
-          <button
-            onClick={() => setIsFuture(!isFuture)}
-            className={`relative w-20 h-10 rounded-full transition-all duration-500 shadow-inner ${
-              isFuture
-                ? 'bg-linear-to-r from-blue-500 to-cyan-500'
-                : 'bg-linear-to-r from-emerald-500 to-green-500'
-            }`}
-          >
-            <div
-              className={`absolute top-1 w-8 h-8 bg-white rounded-full shadow-lg transition-transform ${
-                isFuture ? 'translate-x-11' : 'translate-x-1'
-              } flex items-center justify-center`}
-            >
-              {isFuture ? '🔮' : '✅'}
-            </div>
-          </button>
-
-          <span className={`text-sm font-bold ${isFuture ? 'text-blue-600 scale-110' : 'text-slate-400'}`}>
-            🔮 2026+
-          </span>
-        </div>
+      <section className="max-w-7xl mx-auto px-6 py-12">
+        <h2 className="text-4xl md:text-5xl font-black bg-linear-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+          Estado de la ZBE Málaga
+        </h2>
+        <p className="text-slate-600 mt-3 text-lg">
+          Consulta si puedes circular y evita multas innecesarias 🚗
+        </p>
       </section>
 
       <main className="max-w-7xl mx-auto px-6">
@@ -120,8 +119,9 @@ function App() {
           </div>
         </section>
 
-        {/* MAP + CHECKER */}
+        {/* MAP + SEARCH + CHECKER */}
         <div className="grid lg:grid-cols-12 gap-10">
+          {/* CHECKER */}
           <div className="lg:col-span-4 sticky top-32">
             <div className="bg-white/90 backdrop-blur rounded-3xl shadow-2xl border border-emerald-200 overflow-hidden">
               <div className="bg-linear-to-r from-emerald-600 to-green-600 text-white text-center font-black text-xs uppercase tracking-widest py-4">
@@ -136,8 +136,27 @@ function App() {
             </div>
           </div>
 
-          <div className="lg:col-span-8">
-            <ZbeMap isFuture={isFuture} userLabel={currentBadge} />
+          {/* MAP + STREET SEARCH */}
+          <div className="lg:col-span-8 space-y-6">
+            <ZbeMap
+              isFuture={isFuture}
+              userLabel={currentBadge}
+              externalSearch={searchedLocation}
+            />
+
+            <div className="bg-white/90 backdrop-blur rounded-3xl shadow-xl border border-emerald-200 p-6">
+              <h4 className="text-xs font-black uppercase tracking-widest text-slate-600 mb-3 flex items-center gap-2">
+                📍 Buscar calle
+              </h4>
+
+              <StreetSearch
+                isFuture={isFuture}
+                userLabel={currentBadge}
+                onStreetSelected={(coords, address) =>
+                  setSearchedLocation({ coords, address })
+                }
+              />
+            </div>
           </div>
         </div>
       </main>

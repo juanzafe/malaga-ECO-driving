@@ -1,6 +1,6 @@
 interface Props {
   badge: 'ECO' | 'CERO' | 'C' | 'B' | 'SIN' | null;
-  isFuture: boolean; // Añadimos esto para sincronizar con el mapa
+  isFuture: boolean;
 }
 
 export const BadgeResult = ({ badge, isFuture }: Props) => {
@@ -21,28 +21,27 @@ export const BadgeResult = ({ badge, isFuture }: Props) => {
         return {
           title: `Etiqueta C: Acceso con Condiciones`,
           desc: isFuture 
-            ? "⚠️ En el futuro (2027), podrías verte obligado a usar parking público para entrar al Centro Histórico. Consulta el buscador del mapa."
-            : "✅ Actualmente puedes circular libremente. En el mapa verás tu zona en verde o amarillo (parking).",
+            ? "🅿️ EN 2027: Podrás entrar al Centro Histórico SOLO SI vas a un parking público. En el Anillo Exterior podrás circular libremente sin restricciones."
+            : "✅ HOY PUEDES CIRCULAR: Acceso libre en toda la ZBE sin necesidad de parking. Busca tu calle en el mapa para confirmar.",
           color: "border-blue-200 bg-blue-50 text-blue-800",
           icon: "🔵"
         };
       case 'B':
-  return {
-    title: "Etiqueta B: Riesgo de sanción",
-    desc: isFuture 
-      ? "🚫 ACCESO PROHIBIDO: En 2027, tener etiqueta B será como no tener nada. Solo los que vivan en el centro (Residentes) podrán pasar. Si entras, te llegará la multa de 200€ a casa."
-      : "⚠️ CUIDADO: Ahora puedes pasar, pero el mapa ya te marca zonas en naranja. Eso significa que en pocos meses esas calles serán exclusivas para vecinos y tú no podrás ni cruzar por ellas.",
-    color: "border-orange-200 bg-orange-50 text-orange-800",
-    icon: "🟡"
-  };
-
-case 'SIN':
-  return {
-    title: "Sin Etiqueta: Prohibido y Vigilado",
-    desc: "⛔ MULTA AUTOMÁTICA: Las cámaras ya están activas. No puedes entrar ni al Centro ni al anillo exterior (Huelin, La Victoria, Perchel). La sanción es de 200€ por cada entrada detectada.",
-    color: "border-red-200 bg-red-50 text-red-800",
-    icon: "⛔"
-  };
+        return {
+          title: isFuture ? "Etiqueta B: PROHIBIDO" : "Etiqueta B: PERMITIDO (por ahora)",
+          desc: isFuture 
+            ? "🚫 NO PUEDES ENTRAR: A partir de 2027, la etiqueta B está totalmente prohibida en toda la ZBE (Centro y Anillo). No podrás acceder ni siquiera a parkings públicos. Solo permitido para residentes empadronados en Málaga capital. Multa: 200€."
+            : "✅ HOY SÍ PUEDES CIRCULAR: Tienes acceso libre en toda la ZBE, sin necesidad de ir a parkings. PERO ATENCIÓN: A partir de 2027 quedarás totalmente prohibido, ni siquiera para ir a parkings. Usa el interruptor de arriba para ver cómo te afectará.",
+          color: isFuture ? "border-red-200 bg-red-50 text-red-800" : "border-orange-200 bg-orange-50 text-orange-800",
+          icon: isFuture ? "🚫" : "⚠️"
+        };
+      case 'SIN':
+        return {
+          title: "Sin Etiqueta: PROHIBIDO",
+          desc: "⛔ NO PUEDES ENTRAR: Las cámaras están activas. Prohibido tanto en Centro como en Anillo Exterior, ni siquiera para ir a parkings. Solo permitido para residentes empadronados en Málaga capital. Multa automática: 200€.",
+          color: "border-red-200 bg-red-50 text-red-800",
+          icon: "⛔"
+        };
       default:
         return null;
     }
@@ -62,24 +61,6 @@ case 'SIN':
       <p className="text-xs leading-relaxed opacity-90">
         {info.desc}
       </p>
-
-      <div className="mt-4 pt-3 border-t border-black/5 flex flex-col gap-2">
-        <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Sincronización con el mapa:</p>
-        <div className="flex gap-2">
-            <div className="flex items-center gap-1 text-[10px] font-bold">
-                <span className="w-2 h-2 rounded-full bg-green-500"></span> Libre
-            </div>
-            <div className="flex items-center gap-1 text-[10px] font-bold">
-                <span className="w-2 h-2 rounded-full bg-yellow-500"></span> Parking
-            </div>
-            <div className="flex items-center gap-1 text-[10px] font-bold">
-                <span className="w-2 h-2 rounded-full bg-orange-500"></span> Residentes
-            </div>
-            <div className="flex items-center gap-1 text-[10px] font-bold">
-                <span className="w-2 h-2 rounded-full bg-red-500"></span> Multa
-            </div>
-        </div>
-      </div>
     </div>
   );
 };
