@@ -1,28 +1,50 @@
 export type Badge = 'CERO' | 'ECO' | 'C' | 'B' | 'SIN' | null;
 
-export const checkAccess = (badge: Badge, isAfterNov2026: boolean) => {
-  if (!badge) return null;
+export interface RuleResult {
+  status: 'allowed' | 'warning' | 'prohibited' | 'neutral';
+  message: string;
+  color: string;
+  icon: string;
+}
 
-  // REGLAS HASTA NOVIEMBRE 2026
-  if (!isAfterNov2026) {
-    if (badge === 'SIN') return {
-      status: 'restricted',
-      message: '🚫 Prohibido (salvo si estás empadronado en Málaga capital).'
-    };
-    return { status: 'allowed', message: '✅ Acceso libre para todas las etiquetas.' };
-  }
+export const checkAccess = (
+  badge: Badge, 
+  is2027: boolean, 
+  zone: 'ZONA1' | 'ZONA2',
+  isResident: boolean
+): RuleResult => {
+  if (!badge) return { status: 'neutral', message: 'Selecciona tu etiqueta', color: '#64748b', icon: '🔍' };
 
-  // REGLAS DESPUÉS DE NOVIEMBRE 2026 (Año 3 en adelante)
-  if (badge === 'CERO' || badge === 'ECO' || badge === 'C') {
-    return { status: 'allowed', message: '✅ Acceso permitido.' };
-  }
-  
-  if (badge === 'B') {
+  // 1. RESIDENTES: Tienen moratoria/permiso especial en Málaga
+  if (isResident) {
     return { 
-      status: 'restricted', 
-      message: '⚠️ Solo empadronados. Si vienes de fuera de Málaga, ya no puedes acceder con etiqueta B.' 
+      status: 'allowed', 
+      message: '✅ Acceso permitido por ser Residente.', 
+      color: '#16a34a', 
+      icon: '🏠' 
     };
   }
 
-  return { status: 'prohibited', message: '🚫 Acceso prohibido para vehículos sin etiqueta.' };
+  // 2. NO RESIDENTES (Visitantes)
+  if (badge === 'SIN' || badge === 'B') {
+    return { 
+      status: 'prohibited', 
+      message: '🚫 Acceso prohibido para no residentes.', 
+      color: '#dc2626', 
+      icon: '⛔' 
+    };
+  }
+
+  if (badge === 'C') {
+    if (is2027) {
+      return { status: 'warning', message: '🅿️ Parking obligatorio en toda la ZBE.', color: '#eab308', icon: '🅿️' };
+    }
+    if (zone === 'ZONA1') {
+      return { status: 'warning', message: '🅿️ Centro: Solo Parking Público.', color: '#eab308', icon: '🅿️' };
+    }
+    return { status: 'allowed', message: '✅ Acceso libre (Anillo Exterior).', color: '#16a34a', icon: '✅' };
+  }
+
+  // ECO Y CERO
+  return { status: 'allowed', message: '✅ Acceso libre.', color: '#16a34a', icon: '✅' };
 };

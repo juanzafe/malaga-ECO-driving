@@ -1,19 +1,30 @@
 interface Props {
   badge: 'ECO' | 'CERO' | 'C' | 'B' | 'SIN' | null;
   isFuture: boolean;
+  isResident: boolean;
 }
 
-export const BadgeResult = ({ badge, isFuture }: Props) => {
+export const BadgeResult = ({ badge, isFuture, isResident }: Props) => {
   if (!badge) return null;
 
-  // Lógica de mensajes detallados según etiqueta y tiempo
   const getDetailMessage = () => {
+    // REGLA DE ORO: Si es Residente, siempre puede pasar por ahora
+    if (isResident) {
+      return {
+        title: `Etiqueta ${badge}: Acceso Residente`,
+        desc: "✅ Al estar empadronado en Málaga, tienes permiso para circular por toda la ZBE (Centro y Anillo) sin restricciones, independientemente de tu etiqueta. Las cámaras reconocerán tu matrícula.",
+        color: "border-emerald-200 bg-emerald-50 text-emerald-800",
+        icon: "🏠"
+      };
+    }
+
+    // REGLA PARA NO RESIDENTES (Visitantes/Fuera de Málaga)
     switch (badge) {
       case 'CERO':
       case 'ECO':
         return {
           title: `Etiqueta ${badge}: Libertad Total`,
-          desc: "Puedes circular y aparcar en cualquier zona de Málaga (Centro y Anillo) sin restricciones, tanto ahora como en el futuro.",
+          desc: "Puedes circular y aparcar en cualquier zona de Málaga sin restricciones ni necesidad de parking público.",
           color: "border-green-200 bg-green-50 text-green-800",
           icon: "🍀"
         };
@@ -21,26 +32,28 @@ export const BadgeResult = ({ badge, isFuture }: Props) => {
         return {
           title: `Etiqueta C: Acceso con Condiciones`,
           desc: isFuture 
-            ? "🅿️ EN 2027: Podrás entrar al Centro Histórico SOLO SI vas a un parking público. En el Anillo Exterior podrás circular libremente sin restricciones."
-            : "✅ HOY PUEDES CIRCULAR: Acceso libre en toda la ZBE sin necesidad de parking. Busca tu calle en el mapa para confirmar.",
+            ? "🅿️ EN 2027: Solo podrás entrar a la ZBE (Centro y Anillo) SI vas directamente a un parking público oficial."
+            : "✅ HOY: Tienes acceso libre al Anillo Exterior, pero para entrar al Centro Histórico (Zona 1) es obligatorio aparcar en parking público.",
           color: "border-blue-200 bg-blue-50 text-blue-800",
-          icon: "🔵"
+          icon: "🅿️"
         };
-      case 'B':
-        return {
-          title: isFuture ? "Etiqueta B: PROHIBIDO" : "Etiqueta B: PERMITIDO (por ahora)",
-          desc: isFuture 
-            ? "🚫 NO PUEDES ENTRAR: A partir de 2027, la etiqueta B está totalmente prohibida en toda la ZBE (Centro y Anillo). No podrás acceder ni siquiera a parkings públicos. Solo permitido para residentes empadronados en Málaga capital. Multa: 200€."
-            : "✅ HOY SÍ PUEDES CIRCULAR: Tienes acceso libre en toda la ZBE, sin necesidad de ir a parkings. PERO ATENCIÓN: A partir de 2027 quedarás totalmente prohibido, ni siquiera para ir a parkings. Usa el interruptor de arriba para ver cómo te afectará.",
-          color: isFuture ? "border-red-200 bg-red-50 text-red-800" : "border-orange-200 bg-orange-50 text-orange-800",
-          icon: isFuture ? "🚫" : "⚠️"
-        };
+     case 'B':
+  return {
+    title: isResident ? "Etiqueta B: Acceso Residente" : (isFuture ? "Etiqueta B: PROHIBIDO" : "Etiqueta B: ACCESO RESTRINGIDO"),
+    desc: isResident 
+      ? "✅ Como residente de Málaga capital, puedes seguir circulando con tu etiqueta B en 2027 gracias a la moratoria para empadronados." 
+      : (isFuture 
+          ? "🚫 PROHIBIDO: En 2027 los vehículos B de no residentes no pueden entrar a ninguna zona de la ZBE." 
+          : "🚫 ACCESO RESTRINGIDO: Si no eres residente, ya no puedes circular por la ZBE con etiqueta B."),
+    color: isResident ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-red-200 bg-red-50 text-red-800",
+    icon: isResident ? "🏠" : "🚫"
+  };
       case 'SIN':
         return {
           title: "Sin Etiqueta: PROHIBIDO",
-          desc: "⛔ NO PUEDES ENTRAR: Las cámaras están activas. Prohibido tanto en Centro como en Anillo Exterior, ni siquiera para ir a parkings. Solo permitido para residentes empadronados en Málaga capital. Multa automática: 200€.",
+          desc: "🚫 ACCESO DENEGADO: Los vehículos sin etiqueta de no residentes tienen prohibida la entrada y circulación por toda la ZBE (Centro y Anillo). Multa: 200€.",
           color: "border-red-200 bg-red-50 text-red-800",
-          icon: "⛔"
+          icon: "🚫"
         };
       default:
         return null;
@@ -58,7 +71,7 @@ export const BadgeResult = ({ badge, isFuture }: Props) => {
       </div>
       
       <h4 className="font-bold text-sm mb-1">{info.title}</h4>
-      <p className="text-xs leading-relaxed opacity-90">
+      <p className="text-xs leading-relaxed opacity-90 font-medium">
         {info.desc}
       </p>
     </div>
