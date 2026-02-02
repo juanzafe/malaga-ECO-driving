@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 interface Props {
   badge: 'ECO' | 'CERO' | 'C' | 'B' | 'SIN' | null;
   isFuture: boolean;
@@ -5,53 +7,50 @@ interface Props {
 }
 
 export const BadgeResult = ({ badge, isFuture, isResident }: Props) => {
+  const { t } = useTranslation();
+
   if (!badge) return null;
 
   const getDetailMessage = () => {
-    // REGLA DE ORO: Si es Residente, siempre puede pasar por ahora
+    // 1. CASO RESIDENTE
     if (isResident) {
       return {
-        title: `Etiqueta ${badge}: Acceso Residente`,
-        desc: "✅ Al estar empadronado en Málaga, tienes permiso para circular por toda la ZBE (Centro y Anillo) sin restricciones, independientemente de tu etiqueta. Las cámaras reconocerán tu matrícula.",
+        title: `${t('badgeFinder')} ${badge}: ${t('resident')}`,
+        desc: t('residentBadgeDesc'), 
         color: "border-emerald-200 bg-emerald-50 text-emerald-800",
         icon: "🏠"
       };
     }
 
-    // REGLA PARA NO RESIDENTES (Visitantes/Fuera de Málaga)
+    // 2. CASO NO RESIDENTE
     switch (badge) {
       case 'CERO':
       case 'ECO':
         return {
-          title: `Etiqueta ${badge}: Libertad Total`,
-          desc: "Puedes circular y aparcar en cualquier zona de Málaga sin restricciones ni necesidad de parking público.",
+          title: `Etiqueta ${badge}: ${t('freeArea')}`,
+          desc: t('ecoBadgeDesc'),
           color: "border-green-200 bg-green-50 text-green-800",
           icon: "🍀"
         };
       case 'C':
         return {
-          title: `Etiqueta C: Acceso con Condiciones`,
-          desc: isFuture 
-            ? "🅿️ EN 2027: Solo podrás entrar a la ZBE (Centro y Anillo) SI vas directamente a un parking público oficial."
-            : "✅ HOY: Tienes acceso libre al Anillo Exterior, pero para entrar al Centro Histórico (Zona 1) es obligatorio aparcar en parking público.",
+          title: `Etiqueta C: ${t('checkAddress')}`,
+          desc: isFuture ? t('cBadgeFutureDesc') : t('cBadgeTodayDesc'),
           color: "border-blue-200 bg-blue-50 text-blue-800",
           icon: "🅿️"
         };
-     case 'B':
-  return {
-    title: isResident ? "Etiqueta B: Acceso Residente" : (isFuture ? "Etiqueta B: PROHIBIDO" : "Etiqueta B: ACCESO RESTRINGIDO"),
-    desc: isResident 
-      ? "✅ Como residente de Málaga capital, puedes seguir circulando con tu etiqueta B en 2027 gracias a la moratoria para empadronados." 
-      : (isFuture 
-          ? "🚫 PROHIBIDO: En 2027 los vehículos B de no residentes no pueden entrar a ninguna zona de la ZBE." 
-          : "🚫 ACCESO RESTRINGIDO: Si no eres residente, ya no puedes circular por la ZBE con etiqueta B."),
-    color: isResident ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-red-200 bg-red-50 text-red-800",
-    icon: isResident ? "🏠" : "🚫"
-  };
+      case 'B':
+        return {
+          // Aquí usamos directamente la lógica en el título para evitar variables sin usar
+          title: `Etiqueta B: ${isFuture ? t('streetForbidden') : t('nonResident')}`,
+          desc: isFuture ? t('bBadgeFutureDesc') : t('bBadgeTodayDesc'),
+          color: "border-red-200 bg-red-50 text-red-800",
+          icon: "🚫"
+        };
       case 'SIN':
         return {
-          title: "Sin Etiqueta: PROHIBIDO",
-          desc: "🚫 ACCESO DENEGADO: Los vehículos sin etiqueta de no residentes tienen prohibida la entrada y circulación por toda la ZBE (Centro y Anillo). Multa: 200€.",
+          title: t('streetForbidden'),
+          desc: t('sinBadgeDesc'),
           color: "border-red-200 bg-red-50 text-red-800",
           icon: "🚫"
         };

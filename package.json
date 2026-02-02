@@ -14,11 +14,13 @@
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.18",
     "@types/leaflet": "^1.9.21",
+    "i18next": "^25.8.0",
     "leaflet": "^1.9.4",
     "leaflet-geosearch": "^4.2.2",
     "mapbox-gl": "^3.18.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-i18next": "^16.5.4",
     "react-leaflet": "^5.0.0",
     "react-map-gl": "^8.1.0"
   },
@@ -41,10 +43,10 @@
     "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4"
   },
- "lint-staged": {
-  "*.{ts,tsx}": [
-    "eslint --fix",
-    "bash -c 'npm run type-check'"
-  ]
-}
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "bash -c 'npm run type-check'"
+    ]
+  }
 }
