@@ -48,7 +48,6 @@ export const StreetSearch = ({ onStreetSelected, isFuture, userLabel, isResident
   } | null>(null);
 
   useEffect(() => {
-    // Si la query es corta, no hacemos nada (el estado ya se limpia en onChange)
     if (query.trim().length < 3) return;
 
     const controller = new AbortController();
@@ -125,7 +124,6 @@ export const StreetSearch = ({ onStreetSelected, isFuture, userLabel, isResident
             const value = e.target.value;
             setQuery(value);
             setSelected(null);
-            // Limpiamos resultados síncronamente aquí para evitar el error de React
             if (value.trim().length < 3) {
               setResults([]);
               setLoading(false);

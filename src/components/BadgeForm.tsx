@@ -10,7 +10,7 @@ interface Props {
 export const BadgeForm = ({ onFuelChange, onYearChange, onMonthChange, onCalculate }: Props) => {
   const { t } = useTranslation();
 
-  // Array de claves para los meses (debes añadirlas a i18n.ts o usar una lista traducible)
+
   const monthKeys = [
     'january', 'february', 'march', 'april', 'may', 'june', 
     'july', 'august', 'september', 'october', 'november', 'december'
@@ -24,7 +24,6 @@ export const BadgeForm = ({ onFuelChange, onYearChange, onMonthChange, onCalcula
 
   return (
     <div className="space-y-5">
-      {/* Selector de Motor */}
       <div>
         <label className="block text-sm font-semibold text-gray-600 mb-1">
           {t('fuelType')}
@@ -42,7 +41,6 @@ export const BadgeForm = ({ onFuelChange, onYearChange, onMonthChange, onCalcula
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        {/* Selector de AÑO */}
         <div>
           <label className="block text-sm font-semibold text-gray-600 mb-1">
             {t('registrationYear')}
@@ -58,7 +56,6 @@ export const BadgeForm = ({ onFuelChange, onYearChange, onMonthChange, onCalcula
           </select>
         </div>
 
-        {/* Selector de MES */}
         <div>
           <label className="block text-sm font-semibold text-gray-600 mb-1">
             {t('registrationMonth')}

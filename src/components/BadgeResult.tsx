@@ -12,7 +12,6 @@ export const BadgeResult = ({ badge, isFuture, isResident }: Props) => {
   if (!badge) return null;
 
   const getDetailMessage = () => {
-    // 1. CASO RESIDENTE
     if (isResident) {
       return {
         title: `${t('badgeFinder')} ${badge}: ${t('resident')}`,
@@ -22,7 +21,6 @@ export const BadgeResult = ({ badge, isFuture, isResident }: Props) => {
       };
     }
 
-    // 2. CASO NO RESIDENTE
     switch (badge) {
       case 'CERO':
       case 'ECO':
@@ -41,7 +39,6 @@ export const BadgeResult = ({ badge, isFuture, isResident }: Props) => {
         };
       case 'B':
         return {
-          // Aquí usamos directamente la lógica en el título para evitar variables sin usar
           title: `Etiqueta B: ${isFuture ? t('streetForbidden') : t('nonResident')}`,
           desc: isFuture ? t('bBadgeFutureDesc') : t('bBadgeTodayDesc'),
           color: "border-red-200 bg-red-50 text-red-800",
