@@ -172,7 +172,7 @@ export const StreetSearch = ({ onStreetSelected, isFuture, userLabel, isResident
             <div className={`mt-2 flex items-center gap-2 text-sm font-bold ${
               canAccess() ? 'text-green-700' : 'text-red-700'
             }`}>
-              <span>{canAccess() ? '✅' : '🚫'}</span>
+              
               <span>{canAccess() ? t('streetAllowed') : t('streetForbidden')}</span>
             </div>
           </div>
