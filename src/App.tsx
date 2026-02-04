@@ -60,6 +60,9 @@ function App() {
       <nav className="sticky top-0 z-50 bg-emerald-600 shadow-md">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center text-white">
           <h1 className="text-xl font-black uppercase tracking-tight">{t('appName')}</h1>
+          <button onClick={() => setIsSheetOpen(true)} className="lg:hidden bg-white text-emerald-600 px-4 py-1.5 rounded-full text-xs font-bold">
+            {t('configure')}
+          </button>
         </div>
       </nav>
 
@@ -96,7 +99,26 @@ function App() {
               />
             </div>
 
-            <div className="bg-white rounded-4xl p-2 shadow-xl border overflow-hidden">
+            <div className="bg-white rounded-4xl p-2 shadow-xl border overflow-hidden relative">
+
+              {searchedLocation && currentRule && (
+                <div className="lg:hidden absolute bottom-6 left-4 right-4 z-1000 animate-in fade-in slide-in-from-bottom-4">
+                  <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-2xl border-t-4" style={{ borderColor: currentRule.color }}>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="text-sm font-black" style={{ color: currentRule.color }}>
+                          {currentRule.icon} {t(currentRule.messageKey)}
+                        </p>
+                        <p className="text-[10px] text-slate-500 mt-1 uppercase truncate max-w-50">
+                          {searchedLocation.address.split(',')[0]}
+                        </p>
+                      </div>
+                      <button onClick={() => setSearchedLocation(null)} className="bg-slate-100 p-1.5 rounded-full text-slate-400 text-xs">✕</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="relative h-[65vh] lg:h-150 z-0">
                 <ZbeMap isFuture={isFuture} userLabel={currentBadge} isResident={isResident} externalSearch={searchedLocation} />
               </div>
@@ -111,11 +133,7 @@ function App() {
              <h3 className="text-sm font-black text-slate-400 uppercase mb-4 tracking-widest">
                1. {t('vehicleData')}
              </h3>
-             <VehicleChecker
-                isFuture={isFuture}
-                isResident={isResident}
-                onLabelCalculated={setCurrentBadge}
-              />
+             <VehicleChecker isFuture={isFuture} isResident={isResident} onLabelCalculated={setCurrentBadge} />
           </section>
           
           <div className="h-px bg-slate-100" />
@@ -130,17 +148,9 @@ function App() {
               userLabel={currentBadge}
               onStreetSelected={(coords, address) => {
                 setSearchedLocation({ coords, address });
-                setTimeout(() => setIsSheetOpen(false), 800);
+                setIsSheetOpen(false);
               }}
             />
-            {searchedLocation && currentRule && (
-                <div className="mt-4 p-5 rounded-2xl border-l-4 bg-slate-50 shadow-inner" style={{ borderColor: currentRule.color }}>
-                  <p className="text-base font-bold" style={{ color: currentRule.color }}>
-                    {currentRule.icon} {t(currentRule.messageKey)}
-                  </p>
-                  <p className="text-[10px] text-slate-400 mt-2 uppercase">{searchedLocation.address}</p>
-                </div>
-            )}
           </section>
         </div>
       </MobileBottomSheet>

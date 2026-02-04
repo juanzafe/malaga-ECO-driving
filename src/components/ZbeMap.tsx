@@ -18,26 +18,15 @@ L.Marker.prototype.options.icon = DefaultIcon;
 type ZoneType = 'ZONA1' | 'ZONA2';
 
 const POLY_ZONA_1: LatLngTuple[] = [
-  [36.7235, -4.4255], // Pasillo de Santa Isabel
-  [36.7251, -4.4230], // Carretería (Inicio)
-  [36.7245, -4.4190], // Álamos / Plaza de la Merced
-  [36.7225, -4.4170], // Calle Victoria (Inicio)
-  [36.7210, -4.4180], // Túnel de la Alcazaba
-  [36.7200, -4.4200], // Plaza de la Marina / Cortina del Muelle
-  [36.7195, -4.4235], // Alameda Principal (Sur)
-  [36.7215, -4.4250], // Puente de los Alemanes
+  [36.7235, -4.4255], [36.7251, -4.4230], [36.7245, -4.4190],
+  [36.7225, -4.4170], [36.7210, -4.4180], [36.7200, -4.4200],
+  [36.7195, -4.4235], [36.7215, -4.4250],
 ];
 
 const POLY_ZONA_2: LatLngTuple[] = [
-  [36.7175, -4.4270], // Av. de Andalucía / Tetuán
-  [36.7160, -4.4220], // Muelle Heredia
-  [36.7185, -4.4150], // Paseo de Reding / Malagueta
-  [36.7240, -4.4130], // Túnel Alcazaba (Salida Este)
-  [36.7270, -4.4160], // Calle Victoria / Cristo de la Epidemia
-  [36.7290, -4.4220], // Alameda de Capuchinos
-  [36.7280, -4.4270], // Calle Mármoles
-  [36.7230, -4.4285], // Armengual de la Mota
-  [36.7200, -4.4280], // Av. de la Aurora
+  [36.7175, -4.4270], [36.7160, -4.4220], [36.7185, -4.4150],
+  [36.7240, -4.4130], [36.7270, -4.4160], [36.7290, -4.4220],
+  [36.7280, -4.4270], [36.7230, -4.4285], [36.7200, -4.4280],
 ];
 
 export const ZbeMap = ({
@@ -57,23 +46,8 @@ export const ZbeMap = ({
   const ruleZona1 = checkAccess(userLabel, isFuture, 'ZONA1', isResident);
   const ruleZona2 = checkAccess(userLabel, isFuture, 'ZONA2', isResident);
 
-  const currentRule = externalSearch && checkAccess(userLabel, isFuture, 'ZONA1', isResident);
-
   return (
     <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-inner bg-slate-100">
-
-      {externalSearch && currentRule && (
-        <div className="absolute top-4 right-4 z-1000 bg-white/95 rounded-2xl p-4 shadow-xl border border-white animate-in fade-in zoom-in">
-          <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest leading-none mb-1">
-            Ubicación Seleccionada
-          </p>
-          <p className="text-sm font-bold text-slate-800">{externalSearch.address.split(',')[0]}</p>
-          <div className="mt-2 flex items-center gap-2 font-bold text-xs" style={{ color: currentRule.color }}>
-            <span>{currentRule.icon}</span>
-            <span>{t(currentRule.messageKey)}</span>
-          </div>
-        </div>
-      )}
 
       <MapContainer
         center={[36.7213, -4.4215]}
@@ -83,7 +57,7 @@ export const ZbeMap = ({
       >
         <TileLayer 
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" 
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+          attribution='&copy; OSM'
         />
 
         <Polygon
