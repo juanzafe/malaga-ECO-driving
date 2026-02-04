@@ -81,6 +81,14 @@ i18n.use(initReactI18next).init({
 
         // Misc
         freeArea: 'Área libre de restricciones',
+          privacy: {
+          title: 'Mensaje de privacidad',
+          description: 'Usamos cookies para recordar tus preferencias y mejorar tu experiencia en Málaga Eco.',
+          accept: 'Aceptar y continuar',
+          reject: 'Rechazar',
+          learnMore: 'Ver política de privacidad',
+          note: 'No cargaremos el contenido hasta que aceptes las cookies.',
+        },
       },
     },
     en: {
@@ -161,6 +169,14 @@ i18n.use(initReactI18next).init({
 
         // Misc
         freeArea: 'Free access area',
+               privacy: {
+          title: 'Privacy notice',
+          description: 'We use cookies to remember your preferences and improve your experience in Malaga Eco.',
+          accept: 'Accept and continue',
+          reject: 'Reject',
+          learnMore: 'View privacy policy',
+          note: 'We will not load the content until you accept the cookies.',
+        },
       },
     },
   },

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { VehicleChecker } from './components/VehicleChecker';
 import { ZbeMap } from './components/ZbeMap';
@@ -10,6 +10,17 @@ import { checkAccess } from './data/ZbeRules'; // Importante para la lógica del
 
 function App() {
   const { t } = useTranslation();
+    const consentButtonRef = useRef<HTMLButtonElement | null>(null);
+  const [privacyConsent, setPrivacyConsent] = useState<'accepted' | 'rejected' | null>(() => {
+    const cookie = document.cookie
+      .split('; ')
+      .find((entry) => entry.startsWith('privacy_consent='));
+    const value = cookie?.split('=')[1];
+    if (value === 'accepted' || value === 'rejected') {
+      return value;
+    }
+    return null;
+  });
   const [isFuture, setIsFuture] = useState(false);
   const [isResident, setIsResident] = useState(false);
   const [currentBadge, setCurrentBadge] = useState<Badge>(null);
@@ -17,11 +28,61 @@ function App() {
     coords: [number, number];
     address: string;
   } | null>(null);
+     useEffect(() => {
+    if (privacyConsent === null) {
+      consentButtonRef.current?.focus();
+    }
+  }, [privacyConsent]);
 
-  // Lógica para el mensaje de la calle seleccionada
+  const setPrivacyCookie = (value: 'accepted' | 'rejected') => {
+    document.cookie = `privacy_consent=${value}; max-age=31536000; path=/; samesite=lax`;
+    setPrivacyConsent(value);
+  };
+
   const currentRule = searchedLocation 
     ? checkAccess(currentBadge, isFuture, 'ZONA1', isResident) 
     : null;
+
+   if (privacyConsent === null) {
+    return (
+      <div className="min-h-screen bg-linear-to-br from-emerald-50 via-teal-50 to-cyan-50 text-slate-900 flex items-center justify-center p-6">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="privacy-title"
+          className="max-w-xl w-full bg-white rounded-3xl shadow-2xl border border-white p-8 text-center space-y-4"
+        >
+          <div className="text-4xl">🔒</div>
+          <h2 id="privacy-title" className="text-2xl font-black text-slate-900">
+            {t('privacy.title')}
+          </h2>
+          <p className="text-sm text-slate-600">{t('privacy.description')}</p>
+          <div className="grid gap-3">
+            <button
+              ref={consentButtonRef}
+              onClick={() => setPrivacyCookie('accepted')}
+              className="w-full py-3 rounded-full bg-emerald-600 text-white font-bold text-sm hover:bg-emerald-700 transition"
+            >
+              {t('privacy.accept')}
+            </button>
+            <button
+              onClick={() => setPrivacyCookie('rejected')}
+              className="w-full py-3 rounded-full border border-emerald-200 text-emerald-700 font-bold text-sm hover:bg-emerald-50 transition"
+            >
+              {t('privacy.reject')}
+            </button>
+          </div>
+          <a
+            href="/privacy"
+            className="text-xs font-semibold text-emerald-700 underline underline-offset-4"
+          >
+            {t('privacy.learnMore')}
+          </a>
+          <p className="text-[11px] text-slate-400">{t('privacy.note')}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-linear-to-br from-emerald-50 via-teal-50 to-cyan-50 text-slate-900">
