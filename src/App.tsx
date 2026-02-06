@@ -6,8 +6,8 @@ import { ZbeMap } from './components/ZbeMap';
 import { StreetSearch } from './components/StreetSearch';
 import type { Badge } from './data/ZbeRules';
 import { useTranslation } from 'react-i18next';
-import { LanguageToggle } from './components/LanguageToggle';
 import { checkAccess } from './data/ZbeRules';
+import { Header } from './components/Header';
 
 function App() {
   const { t } = useTranslation();
@@ -55,33 +55,12 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 overflow-x-hidden">
-      <LanguageToggle />
-
-      <nav className="sticky top-0 z-50 bg-emerald-600 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center text-white">
-          <h1 className="text-xl font-black uppercase tracking-tight">{t('appName')}</h1>
-          <button onClick={() => setIsSheetOpen(true)} className="lg:hidden bg-white text-emerald-600 px-4 py-1.5 rounded-full text-xs font-bold">
-            {t('configure')}
-          </button>
-        </div>
-      </nav>
-
-      <div className="sticky top-17 z-40 bg-white/80 backdrop-blur border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center gap-2">
-          <button
-            onClick={() => setIsResident(!isResident)}
-            className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${
-              isResident ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-600'
-            }`}
-          >
-            🏠 {isResident ? t('resident') : t('nonResident')}
-          </button>
-          <div className="flex bg-slate-200 rounded-full p-1">
-            <button onClick={() => setIsFuture(false)} className={`px-4 py-1 rounded-full text-xs font-bold ${!isFuture ? 'bg-white shadow' : ''}`}>2026</button>
-            <button onClick={() => setIsFuture(true)} className={`px-4 py-1 rounded-full text-xs font-bold ${isFuture ? 'bg-white shadow' : ''}`}>2027</button>
-          </div>
-        </div>
-      </div>
+      <Header
+        isFuture={isFuture}
+        isResident={isResident}
+        setIsFuture={setIsFuture}
+        setIsResident={setIsResident}
+      />
 
       <main className="max-w-7xl mx-auto px-4 py-6 mb-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

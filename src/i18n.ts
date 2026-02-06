@@ -65,7 +65,7 @@ i18n.use(initReactI18next).init({
         badgeFinder: "Buscador de distintivo",
         clear: "Limpiar",
         fillAllFields: "Por favor, completa todos los campos",
-       
+        appTagline: "Comprueba si tu vehículo puede acceder a una zona ZBE",
 
         freeArea: 'Área libre de restricciones',
           privacy: {
@@ -110,7 +110,7 @@ i18n.use(initReactI18next).init({
           square: "Square",
           road: "Road"
         },
-
+        appTagline: "Check if your vehicle can access a low-emission zone",
         selectBadge: 'Select a badge to verify access',
         residentAccess: 'Access allowed as a registered resident.',
         noResidentForbidden: 'Access forbidden for non-residents with this badge.',
