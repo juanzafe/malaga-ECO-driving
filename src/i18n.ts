@@ -11,10 +11,17 @@ i18n.use(initReactI18next).init({
         nonResident: 'No residente',
         year2026: '2026',
         year2027: '2027',
+        configure: 'Configurar vehículo',
         months: {
           january: "Enero", february: "Febrero", march: "Marzo", april: "Abril",
           may: "Mayo", june: "Junio", july: "Julio", august: "Agosto",
           september: "Septiembre", october: "Octubre", november: "Noviembre", december: "Diciembre"
+        },
+        location: {
+          useCurrent: "Usar mi ubicación actual",
+          currentPosition: "Tu ubicación actual",
+          permissionDenied: "No se ha podido acceder a tu ubicación",
+          notSupported: "Tu navegador no soporta geolocalización"
         },
         heroTitle: 'Verificador de Acceso ZBE',
         heroDescription: 'Consulta las restricciones actuales y futuras para evitar sanciones.',
@@ -35,12 +42,16 @@ i18n.use(initReactI18next).init({
         },
 
         selectBadge: 'Selecciona una etiqueta para verificar el acceso',
+        freeAccess: 'Acceso libre sin restricciones',
+        parkingRequiredAll: 'Parking obligatorio en toda la ZBE',
+        parkingCenterOnly: 'Parking obligatorio en el Centro',
+        forbiddenCenterB: 'Prohibido acceder al Centro',
+        forbiddenEverywhere: 'Acceso prohibido a la ZBE',
+        
         residentAccess: 'Acceso permitido por ser residente empadronado.',
         noResidentForbidden: 'Acceso prohibido para no residentes con esta etiqueta.',
-        parkingRequiredAll: 'Aparcamiento obligatorio en toda la ZBE para acceder.',
         parkingCenter: 'Acceso libre al Anillo, pero parking obligatorio en el Centro.',
         freeOuterRing: 'Acceso libre al Anillo Exterior.',
-        freeAccess: 'Acceso libre sin restricciones.',
 
         residentBadgeDesc: "✅ Al estar empadronado en Málaga, tienes permiso para circular por toda la ZBE sin restricciones.",
         ecoBadgeDesc: "Puedes circular y aparcar en cualquier zona de Málaga sin restricciones.",
@@ -68,7 +79,7 @@ i18n.use(initReactI18next).init({
         appTagline: "Comprueba si tu vehículo puede acceder a una zona ZBE",
 
         freeArea: 'Área libre de restricciones',
-          privacy: {
+        privacy: {
           title: 'Mensaje de privacidad',
           description: 'Usamos cookies para recordar tus preferencias y mejorar tu experiencia en Málaga Eco.',
           accept: 'Aceptar y continuar',
@@ -86,11 +97,17 @@ i18n.use(initReactI18next).init({
         nonResident: 'Non-resident',
         year2026: '2026',
         year2027: '2027',
-
+        configure: 'Configure vehicle',
         months: {
           january: "January", february: "February", march: "March", april: "April",
           may: "May", june: "June", july: "July", august: "August",
           september: "September", october: "October", november: "November", december: "December"
+        },
+        location: {
+          useCurrent: "Use my current location",
+          currentPosition: "Your current location",
+          permissionDenied: "We couldn’t access your location",
+          notSupported: "Your browser doesn’t support geolocation"
         },
 
         heroTitle: 'LEZ Access Checker',
@@ -110,14 +127,18 @@ i18n.use(initReactI18next).init({
           square: "Square",
           road: "Road"
         },
-        appTagline: "Check if your vehicle can access a low-emission zone",
+
         selectBadge: 'Select a badge to verify access',
+        freeAccess: 'Free access without restrictions',
+        parkingRequiredAll: 'Mandatory parking required in entire LEZ',
+        parkingCenterOnly: 'Mandatory parking in Center',
+        forbiddenCenterB: 'Forbidden in Center',
+        forbiddenEverywhere: 'Access forbidden to LEZ',
+
         residentAccess: 'Access allowed as a registered resident.',
         noResidentForbidden: 'Access forbidden for non-residents with this badge.',
-        parkingRequiredAll: 'Mandatory parking required in the entire LEZ to enter.',
         parkingCenter: 'Free access to the Ring, but mandatory parking in the Center.',
         freeOuterRing: 'Free access to the Outer Ring.',
-        freeAccess: 'Free access without restrictions.',
 
         residentBadgeDesc: "✅ As a registered resident in Malaga, you have permission to drive through the entire LEZ without restrictions.",
         ecoBadgeDesc: "You can drive and park in any area of Malaga without restrictions.",
@@ -142,9 +163,10 @@ i18n.use(initReactI18next).init({
         badgeFinder: "Badge finder",
         clear: "Clear",
         fillAllFields: "Please fill in all fields",
+        appTagline: "Check if your vehicle can access a low-emission zone",
 
         freeArea: 'Free access area',
-               privacy: {
+        privacy: {
           title: 'Privacy notice',
           description: 'We use cookies to remember your preferences and improve your experience in Malaga Eco.',
           accept: 'Accept and continue',

@@ -48,15 +48,14 @@ export const ZbeMap = ({
 
   return (
     <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-inner bg-slate-100">
-
       <MapContainer
         center={[36.7213, -4.4215]}
         zoom={14}
         className="h-full w-full"
         zoomControl={false}
       >
-        <TileLayer 
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" 
+        <TileLayer
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; OSM'
         />
 
@@ -66,15 +65,26 @@ export const ZbeMap = ({
             mouseover: () => setHovered('ZONA2'),
             mouseout: () => setHovered(null),
           }}
-          pathOptions={{ 
+          pathOptions={{
             fillColor: ruleZona2.color,
             color: ruleZona2.color,
             weight: hovered === 'ZONA2' ? 4 : 2,
             fillOpacity: hovered === 'ZONA2' ? 0.4 : 0.2,
-            dashArray: '5, 10'
+            dashArray: '5, 10',
           }}
         >
-          <Tooltip sticky><b>{t('outerRing')}</b></Tooltip>
+          <Tooltip sticky>
+            <div className="flex flex-col p-1">
+              <span className="text-[10px] font-black uppercase text-slate-400">Zona 2</span>
+              <b className="text-sm">{t('outerRing')}</b>
+              <div className="mt-1 flex items-center gap-2 border-t pt-1">
+                <span>{ruleZona2.icon}</span>
+                <span className="font-bold" style={{ color: ruleZona2.color }}>
+                  {t(ruleZona2.messageKey)}
+                </span>
+              </div>
+            </div>
+          </Tooltip>
         </Polygon>
 
         <Polygon
@@ -83,14 +93,25 @@ export const ZbeMap = ({
             mouseover: () => setHovered('ZONA1'),
             mouseout: () => setHovered(null),
           }}
-          pathOptions={{ 
+          pathOptions={{
             fillColor: ruleZona1.color,
             color: ruleZona1.color,
             weight: hovered === 'ZONA1' ? 4 : 2,
-            fillOpacity: hovered === 'ZONA1' ? 0.7 : 0.5 
+            fillOpacity: hovered === 'ZONA1' ? 0.7 : 0.5,
           }}
         >
-          <Tooltip sticky><b>{t('historicCenter')}</b></Tooltip>
+          <Tooltip sticky>
+            <div className="flex flex-col p-1">
+              <span className="text-[10px] font-black uppercase text-slate-400">Zona 1</span>
+              <b className="text-sm">{t('historicCenter')}</b>
+              <div className="mt-1 flex items-center gap-2 border-t pt-1">
+                <span>{ruleZona1.icon}</span>
+                <span className="font-bold" style={{ color: ruleZona1.color }}>
+                  {t(ruleZona1.messageKey)}
+                </span>
+              </div>
+            </div>
+          </Tooltip>
         </Polygon>
 
         {externalSearch && (

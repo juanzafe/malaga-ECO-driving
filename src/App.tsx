@@ -6,7 +6,7 @@ import { ZbeMap } from './components/ZbeMap';
 import { StreetSearch } from './components/StreetSearch';
 import type { Badge } from './data/ZbeRules';
 import { useTranslation } from 'react-i18next';
-import { checkAccess } from './data/ZbeRules';
+import { checkAccess, getZoneFromCoords } from './data/ZbeRules';
 import { Header } from './components/Header';
 
 function App() {
@@ -14,9 +14,11 @@ function App() {
   const consentButtonRef = useRef<HTMLButtonElement | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [privacyConsent, setPrivacyConsent] = useState<'accepted' | 'rejected' | null>(() => {
-    const cookie = document.cookie.split('; ').find((entry) => entry.startsWith('privacy_consent='));
+    const cookie = document.cookie
+      .split('; ')
+      .find((entry) => entry.startsWith('privacy_consent='));
     const value = cookie?.split('=')[1];
-    return (value === 'accepted' || value === 'rejected') ? value : null;
+    return value === 'accepted' || value === 'rejected' ? value : null;
   });
 
   const [isFuture, setIsFuture] = useState(false);
@@ -36,8 +38,13 @@ function App() {
     setPrivacyConsent(value);
   };
 
-  const currentRule = searchedLocation 
-    ? checkAccess(currentBadge, isFuture, 'ZONA1', isResident) 
+  const currentRule = searchedLocation
+    ? checkAccess(
+        currentBadge,
+        isFuture,
+        getZoneFromCoords(searchedLocation.coords),
+        isResident
+      )
     : null;
 
   if (privacyConsent === null) {
@@ -45,7 +52,11 @@ function App() {
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 text-center">
         <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-8 space-y-6">
           <h2 className="text-2xl font-black">{t('privacy.title')}</h2>
-          <button ref={consentButtonRef} onClick={() => setPrivacyCookie('accepted')} className="w-full py-3 bg-emerald-600 text-white rounded-full font-bold">
+          <button
+            ref={consentButtonRef}
+            onClick={() => setPrivacyCookie('accepted')}
+            className="w-full py-3 bg-emerald-600 text-white rounded-full font-bold"
+          >
             {t('privacy.accept')}
           </button>
         </div>
@@ -65,7 +76,11 @@ function App() {
       <main className="max-w-7xl mx-auto px-4 py-6 mb-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="hidden lg:block lg:col-span-4">
-            <VehicleChecker isFuture={isFuture} isResident={isResident} onLabelCalculated={setCurrentBadge} />
+            <VehicleChecker
+              isFuture={isFuture}
+              isResident={isResident}
+              onLabelCalculated={setCurrentBadge}
+            />
           </div>
 
           <div className="lg:col-span-8 flex flex-col gap-6">
@@ -74,49 +89,79 @@ function App() {
                 isResident={isResident}
                 isFuture={isFuture}
                 userLabel={currentBadge}
-                onStreetSelected={(coords, address) => setSearchedLocation({ coords, address })}
+                onStreetSelected={(coords, address) =>
+                  setSearchedLocation({ coords, address })
+                }
               />
             </div>
 
             <div className="bg-white rounded-4xl p-2 shadow-xl border overflow-hidden relative">
-
               {searchedLocation && currentRule && (
                 <div className="lg:hidden absolute bottom-6 left-4 right-4 z-1000 animate-in fade-in slide-in-from-bottom-4">
-                  <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-2xl border-t-4" style={{ borderColor: currentRule.color }}>
+                  <div
+                    className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-2xl border-t-4"
+                    style={{ borderColor: currentRule.color }}
+                  >
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="text-sm font-black" style={{ color: currentRule.color }}>
+                        <p
+                          className="text-sm font-black"
+                          style={{ color: currentRule.color }}
+                        >
                           {currentRule.icon} {t(currentRule.messageKey)}
                         </p>
                         <p className="text-[10px] text-slate-500 mt-1 uppercase truncate max-w-50">
                           {searchedLocation.address.split(',')[0]}
                         </p>
                       </div>
-                      <button onClick={() => setSearchedLocation(null)} className="bg-slate-100 p-1.5 rounded-full text-slate-400 text-xs">✕</button>
+                      <button
+                        onClick={() => setSearchedLocation(null)}
+                        className="bg-slate-100 p-1.5 rounded-full text-slate-400 text-xs"
+                      >
+                        ✕
+                      </button>
                     </div>
                   </div>
                 </div>
               )}
 
               <div className="relative h-[65vh] lg:h-150 z-0">
-                <ZbeMap isFuture={isFuture} userLabel={currentBadge} isResident={isResident} externalSearch={searchedLocation} />
+                <ZbeMap
+                  isFuture={isFuture}
+                  userLabel={currentBadge}
+                  isResident={isResident}
+                  externalSearch={searchedLocation}
+                />
               </div>
             </div>
           </div>
         </div>
       </main>
 
+      <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+        <button
+          onClick={() => setIsSheetOpen(true)}
+          className="bg-emerald-600 text-white px-8 py-3 rounded-full font-black shadow-2xl flex items-center gap-2"
+        >
+          ⚙️ {t('configure')}
+        </button>
+      </div>
+
       <MobileBottomSheet isOpen={isSheetOpen} setOpen={setIsSheetOpen}>
         <div className="space-y-8">
           <section>
-             <h3 className="text-sm font-black text-slate-400 uppercase mb-4 tracking-widest">
-               1. {t('vehicleData')}
-             </h3>
-             <VehicleChecker isFuture={isFuture} isResident={isResident} onLabelCalculated={setCurrentBadge} />
+            <h3 className="text-sm font-black text-slate-400 uppercase mb-4 tracking-widest">
+              1. {t('vehicleData')}
+            </h3>
+            <VehicleChecker
+              isFuture={isFuture}
+              isResident={isResident}
+              onLabelCalculated={setCurrentBadge}
+            />
           </section>
-          
+
           <div className="h-px bg-slate-100" />
-          
+
           <section>
             <h3 className="text-sm font-black text-slate-400 uppercase mb-4 tracking-widest">
               2. {t('checkAddress')}

@@ -7,56 +7,56 @@ interface Props {
 }
 
 export const BadgeResult = ({ badge, isFuture, isResident }: Props) => {
-  const { t } = useTranslation();
-
+  useTranslation();
   if (!badge) return null;
 
-  const getDetailMessage = () => {
-    if (isResident) {
-      return {
-        title: `${t('badgeFinder')} ${badge}: ${t('resident')}`,
-        desc: t('residentBadgeDesc'), 
-        color: "border-emerald-200 bg-emerald-50 text-emerald-800",
-        icon: "🏠"
-      };
-    }
+  const getInfo = () => {
+    if (isResident) return { 
+      title: "Acceso Total Residente", 
+      desc: "Como residente en Málaga, puedes circular por ambas zonas con cualquier etiqueta hasta 2027.",
+      color: "bg-emerald-50 border-emerald-200 text-emerald-800",
+      icon: "🏠" 
+    };
 
     switch (badge) {
       case 'CERO':
       case 'ECO':
-        return {
-          title: `Etiqueta ${badge}: ${t('freeArea')}`,
-          desc: t('ecoBadgeDesc'),
-          color: "border-green-200 bg-green-50 text-green-800",
+        return { 
+          title: "Sin restricciones", 
+          desc: "Puedes circular y aparcar libremente por todo el centro y el anillo exterior.",
+          color: "bg-green-50 border-green-200 text-green-800",
           icon: "🍀"
         };
       case 'C':
-        return {
-          title: `Etiqueta C: ${t('checkAddress')}`,
-          desc: isFuture ? t('cBadgeFutureDesc') : t('cBadgeTodayDesc'),
-          color: "border-blue-200 bg-blue-50 text-blue-800",
+        return { 
+          title: isFuture ? "Solo Parking (2027)" : "Libre en Anillo, Parking en Centro", 
+          desc: isFuture 
+            ? "En 2027, tu etiqueta C solo podrá entrar a las ZBE si vas directo a un parking público." 
+            : "Hoy: Puedes circular por el anillo exterior. Si entras al Centro Histórico (Zona 1), debes ir a un parking.",
+          color: "bg-blue-50 border-blue-200 text-blue-800",
           icon: "🅿️"
         };
       case 'B':
-        return {
-          title: `Etiqueta B: ${isFuture ? t('streetForbidden') : t('nonResident')}`,
-          desc: isFuture ? t('bBadgeFutureDesc') : t('bBadgeTodayDesc'),
-          color: "border-red-200 bg-red-50 text-red-800",
-          icon: "🚫"
-        };
-      case 'SIN':
-        return {
-          title: t('streetForbidden'),
-          desc: t('sinBadgeDesc'),
-          color: "border-red-200 bg-red-50 text-red-800",
+        return { 
+          title: isFuture ? "Acceso Prohibido (2027)" : "Prohibido en Centro", 
+          desc: isFuture 
+            ? "En 2027, los vehículos etiqueta B no podrán entrar en ninguna de las dos zonas ZBE." 
+            : "Hoy: Puedes circular por el anillo exterior, pero tienes prohibido entrar al Centro Histórico.",
+          color: "bg-red-50 border-red-200 text-red-800",
           icon: "🚫"
         };
       default:
-        return null;
+        return { 
+          title: "Acceso Prohibido", 
+          desc: "Los vehículos sin etiqueta tienen prohibido el acceso a ambas zonas ZBE.",
+          color: "bg-slate-100 border-slate-300 text-slate-700",
+          icon: "⛔"
+        };
     }
   };
 
-  const info = getDetailMessage();
+
+  const info = getInfo();
   if (!info) return null;
 
   return (
