@@ -3,7 +3,8 @@ import type { LatLngTuple } from 'leaflet';
 import { useState } from 'react';
 import L from 'leaflet';
 import { type Badge, checkAccess } from '../data/ZbeRules';
-import { useTranslation } from 'react-i18next';
+// He quitado useTranslation porque no se usaba
+import type { Parking } from '../types/Parking';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
@@ -14,6 +15,12 @@ const DefaultIcon = L.icon({
   iconAnchor: [12, 41],
 });
 L.Marker.prototype.options.icon = DefaultIcon;
+
+const ParkingIcon = L.divIcon({
+  html: '🅿️',
+  className: 'text-xl',
+  iconSize: [24, 24],
+});
 
 type ZoneType = 'ZONA1' | 'ZONA2';
 
@@ -34,13 +41,14 @@ export const ZbeMap = ({
   userLabel,
   isResident,
   externalSearch,
+  externalParkings,
 }: {
   isFuture: boolean;
   userLabel: Badge;
   isResident: boolean;
   externalSearch?: { coords: [number, number]; address: string } | null;
+  externalParkings?: Parking[];
 }) => {
-  const { t } = useTranslation();
   const [hovered, setHovered] = useState<ZoneType | null>(null);
 
   const ruleZona1 = checkAccess(userLabel, isFuture, 'ZONA1', isResident);
@@ -56,7 +64,7 @@ export const ZbeMap = ({
       >
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-          attribution='&copy; OSM'
+          attribution="&copy; OSM"
         />
 
         <Polygon
@@ -72,20 +80,7 @@ export const ZbeMap = ({
             fillOpacity: hovered === 'ZONA2' ? 0.4 : 0.2,
             dashArray: '5, 10',
           }}
-        >
-          <Tooltip sticky>
-            <div className="flex flex-col p-1">
-              <span className="text-[10px] font-black uppercase text-slate-400">Zona 2</span>
-              <b className="text-sm">{t('outerRing')}</b>
-              <div className="mt-1 flex items-center gap-2 border-t pt-1">
-                <span>{ruleZona2.icon}</span>
-                <span className="font-bold" style={{ color: ruleZona2.color }}>
-                  {t(ruleZona2.messageKey)}
-                </span>
-              </div>
-            </div>
-          </Tooltip>
-        </Polygon>
+        />
 
         <Polygon
           positions={POLY_ZONA_1}
@@ -99,20 +94,7 @@ export const ZbeMap = ({
             weight: hovered === 'ZONA1' ? 4 : 2,
             fillOpacity: hovered === 'ZONA1' ? 0.7 : 0.5,
           }}
-        >
-          <Tooltip sticky>
-            <div className="flex flex-col p-1">
-              <span className="text-[10px] font-black uppercase text-slate-400">Zona 1</span>
-              <b className="text-sm">{t('historicCenter')}</b>
-              <div className="mt-1 flex items-center gap-2 border-t pt-1">
-                <span>{ruleZona1.icon}</span>
-                <span className="font-bold" style={{ color: ruleZona1.color }}>
-                  {t(ruleZona1.messageKey)}
-                </span>
-              </div>
-            </div>
-          </Tooltip>
-        </Polygon>
+        />
 
         {externalSearch && (
           <Marker position={externalSearch.coords}>
@@ -121,6 +103,22 @@ export const ZbeMap = ({
             </Tooltip>
           </Marker>
         )}
+
+{externalParkings?.map(p => {
+  // Validar que las coordenadas existen y son números
+  if (!p.coords || !p.coords[0] || !p.coords[1]) {
+    console.warn('⚠️ Parking sin coordenadas válidas:', p);
+    return null;
+  }
+  
+  return (
+    <Marker key={p.id} position={p.coords} icon={ParkingIcon}>
+      <Tooltip>
+        <b>{p.name}</b>
+      </Tooltip>
+    </Marker>
+  );
+})}
       </MapContainer>
     </div>
   );

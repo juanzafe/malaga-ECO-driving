@@ -32,6 +32,7 @@ export function MobileBottomSheet({ children, isOpen, setOpen }: Props) {
               Configurar Vehículo y Búsqueda
             </p>
           )}
+          
         </div>
 
         <div className="px-6 pb-10 h-[calc(80vh-70px)] overflow-y-auto">

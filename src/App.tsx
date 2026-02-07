@@ -8,19 +8,15 @@ import type { Badge } from './data/ZbeRules';
 import { useTranslation } from 'react-i18next';
 import { checkAccess, getZoneFromCoords } from './data/ZbeRules';
 import { Header } from './components/Header';
+import type { Parking } from './types/Parking';
+import { NearbyParkings } from './components/NearbyParkings';
 
 function App() {
   const { t } = useTranslation();
   const consentButtonRef = useRef<HTMLButtonElement | null>(null);
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [privacyConsent, setPrivacyConsent] = useState<'accepted' | 'rejected' | null>(() => {
-    const cookie = document.cookie
-      .split('; ')
-      .find((entry) => entry.startsWith('privacy_consent='));
-    const value = cookie?.split('=')[1];
-    return value === 'accepted' || value === 'rejected' ? value : null;
-  });
 
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [nearbyParkings, setNearbyParkings] = useState<Parking[]>([]);
   const [isFuture, setIsFuture] = useState(false);
   const [isResident, setIsResident] = useState(false);
   const [currentBadge, setCurrentBadge] = useState<Badge>(null);
@@ -29,8 +25,18 @@ function App() {
     address: string;
   } | null>(null);
 
+  const [privacyConsent, setPrivacyConsent] = useState<'accepted' | 'rejected' | null>(() => {
+    const cookie = document.cookie
+      .split('; ')
+      .find((entry) => entry.startsWith('privacy_consent='));
+    const value = cookie?.split('=')[1];
+    return value === 'accepted' || value === 'rejected' ? value : null;
+  });
+
   useEffect(() => {
-    if (privacyConsent === null) consentButtonRef.current?.focus();
+    if (privacyConsent === null) {
+      consentButtonRef.current?.focus();
+    }
   }, [privacyConsent]);
 
   const setPrivacyCookie = (value: 'accepted' | 'rejected') => {
@@ -84,19 +90,33 @@ function App() {
           </div>
 
           <div className="lg:col-span-8 flex flex-col gap-6">
-            <div className="hidden lg:block bg-white rounded-3xl p-6 shadow-sm border">
+            <div className="hidden lg:block bg-white rounded-3xl p-6 shadow-sm border space-y-4">
               <StreetSearch
                 isResident={isResident}
                 isFuture={isFuture}
                 userLabel={currentBadge}
-                onStreetSelected={(coords, address) =>
-                  setSearchedLocation({ coords, address })
-                }
+                onStreetSelected={(coords, address) => {
+                  setNearbyParkings([]);
+                  setSearchedLocation({ coords, address });
+                }}
               />
+              
+              {searchedLocation && (
+                <NearbyParkings
+  origin={searchedLocation.coords}
+  onParkingsLoaded={setNearbyParkings}
+  onParkingSelected={(parking) => {
+    setSearchedLocation({
+      coords: parking.coords,
+      address: parking.name,
+    });
+  }}
+/>
+              )}
             </div>
 
             <div className="bg-white rounded-4xl p-2 shadow-xl border overflow-hidden relative">
-              {searchedLocation && currentRule && (
+              {searchedLocation && currentRule && !isSheetOpen && (
                 <div className="lg:hidden absolute bottom-6 left-4 right-4 z-1000 animate-in fade-in slide-in-from-bottom-4">
                   <div
                     className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-2xl border-t-4"
@@ -131,14 +151,15 @@ function App() {
                   userLabel={currentBadge}
                   isResident={isResident}
                   externalSearch={searchedLocation}
+                  externalParkings={nearbyParkings}
                 />
               </div>
             </div>
           </div>
         </div>
       </main>
-
-      <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+      
+<div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 lg:hidden">
         <button
           onClick={() => setIsSheetOpen(true)}
           className="bg-emerald-600 text-white px-8 py-3 rounded-full font-black shadow-2xl flex items-center gap-2"
@@ -153,6 +174,26 @@ function App() {
             <h3 className="text-sm font-black text-slate-400 uppercase mb-4 tracking-widest">
               1. {t('vehicleData')}
             </h3>
+
+  
+            {searchedLocation && (
+              <>
+                <div className="mb-4">
+                   <NearbyParkings
+  origin={searchedLocation.coords}
+  onParkingsLoaded={setNearbyParkings}
+  onParkingSelected={(parking) => {
+    setSearchedLocation({
+      coords: parking.coords,
+      address: parking.name,
+    });
+  }}
+/>
+                </div>
+                <div className="h-px bg-slate-100 mb-4" />
+              </>
+            )}
+
             <VehicleChecker
               isFuture={isFuture}
               isResident={isResident}
@@ -171,6 +212,7 @@ function App() {
               isFuture={isFuture}
               userLabel={currentBadge}
               onStreetSelected={(coords, address) => {
+                setNearbyParkings([]);
                 setSearchedLocation({ coords, address });
                 setIsSheetOpen(false);
               }}
