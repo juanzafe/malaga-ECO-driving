@@ -1,73 +1,29 @@
-# React + TypeScript + Vite
+# ZBE Málaga Checker 🚗
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Una herramienta interactiva para saber si puedes entrar con tu coche en las nuevas Zonas de Bajas Emisiones (ZBE) de Málaga. 
 
-Currently, two official plugins are available:
+El proyecto ayuda a los conductores a evitar multas consultando las restricciones actuales y las que entrarán en vigor en 2025 y 2026, dependiendo de su etiqueta ambiental y si son residentes.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Lo que hace la App:
+* **Mapa interactivo:** Visualiza los límites exactos de la ZONA 1 y ZONA 2 de Málaga mediante polígonos sobre el mapa.
+* **Calculadora de acceso:** Dices qué etiqueta tienes y si eres residente, y la app te dice si tienes el paso permitido, restringido o prohibido.
+* **Buscador de parkings:** Si buscas una dirección y no puedes entrar, la app consulta automáticamente la API de OpenStreetMap (Overpass) y te muestra los parkings públicos más cercanos.
+* **Modo futuro:** Puedes ver cómo cambiarán las reglas en enero de 2026 para planificarte con antelación.
+* **Diseño móvil:** Interfaz pensada para usarse cómodamente desde el móvil con paneles deslizables.
 
-## React Compiler
+## Tecnologías que he usado:
+* **React 18** y **TypeScript** para toda la estructura y lógica.
+* **Leaflet** y **React-Leaflet** para la gestión del mapa y las zonas.
+* **Tailwind CSS** para un diseño limpio y rápido.
+* **i18next** para tener la app tanto en español como en inglés.
+* **Overpass API** para obtener datos de parkings en tiempo real.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Instalación:
+Si quieres probarlo en local, solo tienes que clonar el repo y lanzarlo:
 
-## Expanding the ESLint configuration
+1. `git clone https://github.com/juanzafe/nombre-de-tu-repo.git`
+2. `npm install`
+3. `npm run dev`
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+Hecho por **Juan Zamudio** - Frontend Developer.
