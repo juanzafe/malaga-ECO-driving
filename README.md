@@ -2,7 +2,7 @@
 
 Una herramienta interactiva para saber si puedes entrar con tu coche en las nuevas Zonas de Bajas Emisiones (ZBE) de Málaga. 
 
-El proyecto ayuda a los conductores a evitar multas consultando las restricciones actuales y las que entrarán en vigor en 2025 y 2026, dependiendo de su etiqueta ambiental y si son residentes.
+El proyecto ayuda a los conductores a evitar multas consultando las restricciones actuales y las que entrarán en vigor en 2026 y 2027, dependiendo de su etiqueta ambiental y si son residentes.
 
 ## Lo que hace la App:
 * **Mapa interactivo:** Visualiza los límites exactos de la ZONA 1 y ZONA 2 de Málaga mediante polígonos sobre el mapa.
