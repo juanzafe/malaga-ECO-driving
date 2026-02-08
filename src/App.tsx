@@ -1,74 +1,31 @@
-import { MobileBottomSheet } from './components/MobileBottomSheet';
-import { useEffect, useRef, useState } from 'react';
-import 'leaflet/dist/leaflet.css';
-import { VehicleChecker } from './components/VehicleChecker';
-import { ZbeMap } from './components/ZbeMap';
-import { StreetSearch } from './components/StreetSearch';
-import type { Badge } from './data/ZbeRules';
-import { useTranslation } from 'react-i18next';
-import { checkAccess, getZoneFromCoords } from './data/ZbeRules';
-import { Header } from './components/Header';
-import type { Parking } from './types/Parking';
-import { NearbyParkings } from './components/NearbyParkings';
+import { MobileBottomSheet } from './components/MobileBottomSheet'
+import { useState } from 'react'
+import 'leaflet/dist/leaflet.css'
+import { VehicleChecker } from './components/VehicleChecker'
+import { ZbeMap } from './components/ZbeMap'
+import { StreetSearch } from './components/StreetSearch'
+import type { Badge } from './data/ZbeRules'
+import { useTranslation } from 'react-i18next'
+import { checkAccess, getZoneFromCoords } from './data/ZbeRules'
+import { Header } from './components/Header'
+import type { Parking } from './types/Parking'
+import { NearbyParkings } from './components/NearbyParkings'
 
 function App() {
-  const { t } = useTranslation();
-  const consentButtonRef = useRef<HTMLButtonElement | null>(null);
-
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [nearbyParkings, setNearbyParkings] = useState<Parking[]>([]);
-  const [isFuture, setIsFuture] = useState(false);
-  const [isResident, setIsResident] = useState(false);
-  const [currentBadge, setCurrentBadge] = useState<Badge>(null);
+  const { t } = useTranslation()
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
+  const [nearbyParkings, setNearbyParkings] = useState<Parking[]>([])
+  const [isFuture, setIsFuture] = useState(false)
+  const [isResident, setIsResident] = useState(false)
+  const [currentBadge, setCurrentBadge] = useState<Badge>(null)
   const [searchedLocation, setSearchedLocation] = useState<{
-    coords: [number, number];
-    address: string;
-  } | null>(null);
-
-  const [privacyConsent, setPrivacyConsent] = useState<'accepted' | 'rejected' | null>(() => {
-    const cookie = document.cookie
-      .split('; ')
-      .find((entry) => entry.startsWith('privacy_consent='));
-    const value = cookie?.split('=')[1];
-    return value === 'accepted' || value === 'rejected' ? value : null;
-  });
-
-  useEffect(() => {
-    if (privacyConsent === null) {
-      consentButtonRef.current?.focus();
-    }
-  }, [privacyConsent]);
-
-  const setPrivacyCookie = (value: 'accepted' | 'rejected') => {
-    document.cookie = `privacy_consent=${value}; max-age=31536000; path=/; samesite=lax`;
-    setPrivacyConsent(value);
-  };
+    coords: [number, number]
+    address: string
+  } | null>(null)
 
   const currentRule = searchedLocation
-    ? checkAccess(
-        currentBadge,
-        isFuture,
-        getZoneFromCoords(searchedLocation.coords),
-        isResident
-      )
-    : null;
-
-  if (privacyConsent === null) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 text-center">
-        <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-8 space-y-6">
-          <h2 className="text-2xl font-black">{t('privacy.title')}</h2>
-          <button
-            ref={consentButtonRef}
-            onClick={() => setPrivacyCookie('accepted')}
-            className="w-full py-3 bg-emerald-600 text-white rounded-full font-bold"
-          >
-            {t('privacy.accept')}
-          </button>
-        </div>
-      </div>
-    );
-  }
+    ? checkAccess(currentBadge, isFuture, getZoneFromCoords(searchedLocation.coords), isResident)
+    : null
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 overflow-x-hidden">
@@ -96,22 +53,22 @@ function App() {
                 isFuture={isFuture}
                 userLabel={currentBadge}
                 onStreetSelected={(coords, address) => {
-                  setNearbyParkings([]);
-                  setSearchedLocation({ coords, address });
+                  setNearbyParkings([])
+                  setSearchedLocation({ coords, address })
                 }}
               />
-              
+
               {searchedLocation && (
                 <NearbyParkings
-  origin={searchedLocation.coords}
-  onParkingsLoaded={setNearbyParkings}
-  onParkingSelected={(parking) => {
-    setSearchedLocation({
-      coords: parking.coords,
-      address: parking.name,
-    });
-  }}
-/>
+                  origin={searchedLocation.coords}
+                  onParkingsLoaded={setNearbyParkings}
+                  onParkingSelected={(parking) => {
+                    setSearchedLocation({
+                      coords: parking.coords,
+                      address: parking.name,
+                    })
+                  }}
+                />
               )}
             </div>
 
@@ -124,10 +81,7 @@ function App() {
                   >
                     <div className="flex items-start justify-between">
                       <div>
-                        <p
-                          className="text-sm font-black"
-                          style={{ color: currentRule.color }}
-                        >
+                        <p className="text-sm font-black" style={{ color: currentRule.color }}>
                           {currentRule.icon} {t(currentRule.messageKey)}
                         </p>
                         <p className="text-[10px] text-slate-500 mt-1 uppercase truncate max-w-50">
@@ -158,8 +112,8 @@ function App() {
           </div>
         </div>
       </main>
-      
-<div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 lg:hidden">
+
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 lg:hidden">
         <button
           onClick={() => setIsSheetOpen(true)}
           className="bg-emerald-600 text-white px-8 py-3 rounded-full font-black shadow-2xl flex items-center gap-2"
@@ -175,20 +129,19 @@ function App() {
               1. {t('vehicleData')}
             </h3>
 
-  
             {searchedLocation && (
               <>
                 <div className="mb-4">
-                   <NearbyParkings
-  origin={searchedLocation.coords}
-  onParkingsLoaded={setNearbyParkings}
-  onParkingSelected={(parking) => {
-    setSearchedLocation({
-      coords: parking.coords,
-      address: parking.name,
-    });
-  }}
-/>
+                  <NearbyParkings
+                    origin={searchedLocation.coords}
+                    onParkingsLoaded={setNearbyParkings}
+                    onParkingSelected={(parking) => {
+                      setSearchedLocation({
+                        coords: parking.coords,
+                        address: parking.name,
+                      })
+                    }}
+                  />
                 </div>
                 <div className="h-px bg-slate-100 mb-4" />
               </>
@@ -212,16 +165,16 @@ function App() {
               isFuture={isFuture}
               userLabel={currentBadge}
               onStreetSelected={(coords, address) => {
-                setNearbyParkings([]);
-                setSearchedLocation({ coords, address });
-                setIsSheetOpen(false);
+                setNearbyParkings([])
+                setSearchedLocation({ coords, address })
+                setIsSheetOpen(false)
               }}
             />
           </section>
         </div>
       </MobileBottomSheet>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
