@@ -94,7 +94,6 @@ export const NearbyParkings = ({ origin, onParkingsLoaded }: Props) => {
           return; 
 
         } catch (err: unknown) {
-          // Eliminamos el 'any' del catch usando Type Guards
           if (err instanceof Error) {
             if (err.name === 'AbortError') return;
             console.warn(`Error en ${server}: ${err.message}`);

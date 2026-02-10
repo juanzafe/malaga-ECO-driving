@@ -56,8 +56,6 @@ const FIXED_ZONA1_PARKINGS: Parking[] = [
 ];
 
 const OVERPASS_SERVERS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter'];
-
-// COMPONENTE OPTIMIZADO (Sin 'any' y más rápido)
 export const NearbyParkings = ({ origin, onParkingsLoaded }: { origin: [number, number], onParkingsLoaded: (p: Parking[]) => void }) => {
   useEffect(() => {
     const controller = new AbortController();
@@ -103,7 +101,6 @@ export const NearbyParkings = ({ origin, onParkingsLoaded }: { origin: [number, 
   return null;
 };
 
-// COMPONENTE DE MAPA CON TOOLTIPS DINÁMICOS
 export const ZbeMap = ({ isFuture, userLabel, isResident, externalSearch, externalParkings }: {
   isFuture: boolean;
   userLabel: Badge;
