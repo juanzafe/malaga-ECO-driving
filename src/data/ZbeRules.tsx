@@ -1,6 +1,8 @@
 export type Badge = 'CERO' | 'ECO' | 'C' | 'B' | 'SIN' | null;
 
 export interface RuleResult {
+  message: string;
+  allowed: any;
   status: 'allowed' | 'warning' | 'prohibited' | 'neutral';
   messageKey: string;
   color: string;

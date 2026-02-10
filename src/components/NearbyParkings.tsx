@@ -25,37 +25,44 @@ const FIXED_ZONA1_PARKINGS: Parking[] = [
   { id: 'fixed-larios', name: 'Parking Larios Centro', coords: [36.7220, -4.4210] },
 ];
 
-const OVERPASS_SERVERS = [
-  'https://overpass.kumi.systems/api/interpreter',
+const OVERPASS_SERVERS: string[] = [
   'https://overpass-api.de/api/interpreter',
+  'https://overpass.kumi.systems/api/interpreter',
   'https://overpass.openstreetmap.ru/api/interpreter',
 ];
 
 export const NearbyParkings = ({ origin, onParkingsLoaded }: Props) => {
   useEffect(() => {
-    let cancelled = false;
-    let serverIndex = 0;
+    const controller = new AbortController();
+    let isMounted = true;
 
-    const query = `
-      [out:json][timeout:15];
-      (
-        node["amenity"="parking"]["access"!="private"](around:2000,${origin[0]},${origin[1]});
-        way["amenity"="parking"]["access"!="private"](around:2000,${origin[0]},${origin[1]});
-      );
-      out center tags;
-    `;
+    const fetchParkings = async (): Promise<void> => {
+      const query = `
+        [out:json][timeout:10];
+        (
+          node["amenity"="parking"]["access"!="private"](around:2000,${origin[0]},${origin[1]});
+          way["amenity"="parking"]["access"!="private"](around:2000,${origin[0]},${origin[1]});
+        );
+        out center 40;
+      `;
 
-    const tryFetch = async () => {
-      while (serverIndex < OVERPASS_SERVERS.length && !cancelled) {
-        const server = OVERPASS_SERVERS[serverIndex];
+      for (const server of OVERPASS_SERVERS) {
+        if (!isMounted) return;
+        
         try {
-          const res = await fetch(server, { method: 'POST', body: query });
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          const data: OverpassResponse = await res.json();
-          if (cancelled) return;
+          const res = await fetch(server, { 
+            method: 'POST', 
+            body: query,
+            signal: controller.signal 
+          });
+
+          if (!res.ok) continue;
+
+          const data = (await res.json()) as OverpassResponse;
+          if (!isMounted) return;
 
           const parsedFromAPI: Parking[] = data.elements
-            .map(el => {
+            .map((el: OverpassElement): Parking | null => {
               const lat = el.lat ?? el.center?.lat;
               const lon = el.lon ?? el.center?.lon;
               if (!lat || !lon) return null;
@@ -65,35 +72,46 @@ export const NearbyParkings = ({ origin, onParkingsLoaded }: Props) => {
                 coords: [lat, lon] as [number, number],
               };
             })
-            .filter((p): p is Parking => p !== null)
-            .filter(p => {
+            .filter((p): p is Parking => {
+              if (p === null) return false;
               const zone = getZoneFromCoords(p.coords);
               return zone === 'ZONA1' || zone === 'ZONA2';
             });
 
-          const allParkings = [...FIXED_ZONA1_PARKINGS, ...parsedFromAPI];
-          
-          const uniqueParkings = allParkings.filter((parking, index, self) => 
-            index === self.findIndex(p => {
-              const dist = Math.sqrt(Math.pow(p.coords[0] - parking.coords[0], 2) + Math.pow(p.coords[1] - parking.coords[1], 2)) * 111000;
-              return dist < 50;
-            })
-          );
+          const all: Parking[] = [...FIXED_ZONA1_PARKINGS, ...parsedFromAPI];
+          const seen = new Set<string>();
+          const uniqueParkings: Parking[] = [];
+
+          for (const p of all) {
+            const bucket = `${p.coords[0].toFixed(4)},${p.coords[1].toFixed(4)}`;
+            if (!seen.has(bucket)) {
+              seen.add(bucket);
+              uniqueParkings.push(p);
+            }
+          }
 
           onParkingsLoaded(uniqueParkings.slice(0, 15));
-          return;
-        } catch {
-          serverIndex++;
-          if (serverIndex >= OVERPASS_SERVERS.length && !cancelled) {
-            onParkingsLoaded(FIXED_ZONA1_PARKINGS);
+          return; 
+
+        } catch (err: unknown) {
+          // Eliminamos el 'any' del catch usando Type Guards
+          if (err instanceof Error) {
+            if (err.name === 'AbortError') return;
+            console.warn(`Error en ${server}: ${err.message}`);
           }
         }
       }
+
+      if (isMounted) onParkingsLoaded(FIXED_ZONA1_PARKINGS);
     };
 
-    tryFetch();
-    return () => { cancelled = true; };
-  }, [origin, onParkingsLoaded]);
+    fetchParkings();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [onParkingsLoaded, origin]);
 
   return null;
 };

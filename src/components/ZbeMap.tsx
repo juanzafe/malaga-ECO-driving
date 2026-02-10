@@ -55,70 +55,56 @@ const FIXED_ZONA1_PARKINGS: Parking[] = [
   { id: 'fixed-larios', name: 'Parking Larios Centro', coords: [36.7220, -4.4210] },
 ];
 
-const OVERPASS_SERVERS = [
-  'https://overpass.kumi.systems/api/interpreter',
-  'https://overpass-api.de/api/interpreter',
-  'https://overpass.openstreetmap.ru/api/interpreter',
-];
+const OVERPASS_SERVERS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter'];
 
+// COMPONENTE OPTIMIZADO (Sin 'any' y más rápido)
 export const NearbyParkings = ({ origin, onParkingsLoaded }: { origin: [number, number], onParkingsLoaded: (p: Parking[]) => void }) => {
   useEffect(() => {
-    let cancelled = false;
-    let serverIndex = 0;
+    const controller = new AbortController();
+    let isMounted = true;
 
-    const query = `[out:json][timeout:15];(node["amenity"="parking"]["access"!="private"](around:2000,${origin[0]},${origin[1]});way["amenity"="parking"]["access"!="private"](around:2000,${origin[0]},${origin[1]}););out center tags;`;
+    const fetchParkings = async (): Promise<void> => {
+      const query = `[out:json][timeout:10];(node["amenity"="parking"]["access"!="private"](around:2000,${origin[0]},${origin[1]});way["amenity"="parking"]["access"!="private"](around:2000,${origin[0]},${origin[1]}););out center 30;`;
 
-    const tryFetch = async () => {
-      while (serverIndex < OVERPASS_SERVERS.length && !cancelled) {
+      for (const server of OVERPASS_SERVERS) {
+        if (!isMounted) return;
         try {
-          const res = await fetch(OVERPASS_SERVERS[serverIndex], { method: 'POST', body: query });
-          if (!res.ok) throw new Error();
-          const data: OverpassResponse = await res.json();
-          if (cancelled) return;
-
+          const res = await fetch(server, { method: 'POST', body: query, signal: controller.signal });
+          if (!res.ok) continue;
+          const data = (await res.json()) as OverpassResponse;
+          
           const parsed: Parking[] = data.elements
-            .map((el: OverpassElement) => {
+            .map((el: OverpassElement): Parking | null => {
               const lat = el.lat ?? el.center?.lat;
               const lon = el.lon ?? el.center?.lon;
               if (!lat || !lon) return null;
-              return {
-                id: String(el.id),
-                name: el.tags?.name || 'Parking público',
-                coords: [lat, lon] as [number, number],
-              };
+              return { id: String(el.id), name: el.tags?.name || 'Parking público', coords: [lat, lon] };
             })
-            .filter((p): p is Parking => p !== null)
-            .filter((p) => {
-               const zone = getZoneFromCoords(p.coords);
-               return zone === 'ZONA1' || zone === 'ZONA2';
-            });
+            .filter((p): p is Parking => p !== null && (getZoneFromCoords(p.coords) === 'ZONA1' || getZoneFromCoords(p.coords) === 'ZONA2'));
 
           const all = [...FIXED_ZONA1_PARKINGS, ...parsed];
-          const unique = all.filter((p, i, s) => 
-            i === s.findIndex(t => Math.abs(t.coords[0]-p.coords[0]) < 0.0005 && Math.abs(t.coords[1]-p.coords[1]) < 0.0005)
-          );
-
+          const seen = new Set<string>();
+          const unique: Parking[] = [];
+          for (const p of all) {
+            const bucket = `${p.coords[0].toFixed(4)},${p.coords[1].toFixed(4)}`;
+            if (!seen.has(bucket)) { seen.add(bucket); unique.push(p); }
+          }
           onParkingsLoaded(unique.slice(0, 15));
           return;
-        } catch {
-          serverIndex++;
-          if (serverIndex >= OVERPASS_SERVERS.length && !cancelled) onParkingsLoaded(FIXED_ZONA1_PARKINGS);
+        } catch (err: unknown) {
+          if (err instanceof Error && err.name === 'AbortError') return;
         }
       }
+      if (isMounted) onParkingsLoaded(FIXED_ZONA1_PARKINGS);
     };
-    tryFetch();
-    return () => { cancelled = true; };
-  }, [origin, onParkingsLoaded]);
+    fetchParkings();
+    return () => { isMounted = false; controller.abort(); };
+  }, [onParkingsLoaded, origin]);
   return null;
 };
 
-export const ZbeMap = ({
-  isFuture,
-  userLabel,
-  isResident,
-  externalSearch,
-  externalParkings,
-}: {
+// COMPONENTE DE MAPA CON TOOLTIPS DINÁMICOS
+export const ZbeMap = ({ isFuture, userLabel, isResident, externalSearch, externalParkings }: {
   isFuture: boolean;
   userLabel: Badge;
   isResident: boolean;
@@ -142,11 +128,56 @@ export const ZbeMap = ({
       <MapContainer center={[36.7213, -4.4215]} zoom={14} className="h-full w-full" zoomControl={false}>
         <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" attribution="© OSM" />
 
-        <Polygon positions={POLY_ZONA_2} eventHandlers={{ mouseover: () => setHovered('ZONA2'), mouseout: () => setHovered(null) }}
-          pathOptions={{ fillColor: ruleZona2.color, color: ruleZona2.color, weight: hovered === 'ZONA2' ? 4 : 2, fillOpacity: hovered === 'ZONA2' ? 0.4 : 0.2, dashArray: '5, 10' }} />
+        {/* ZONA 2 - EXTERIOR */}
+        <Polygon 
+          positions={POLY_ZONA_2} 
+          eventHandlers={{ mouseover: () => setHovered('ZONA2'), mouseout: () => setHovered(null) }}
+          pathOptions={{ 
+            fillColor: ruleZona2.color, 
+            color: ruleZona2.color, 
+            weight: hovered === 'ZONA2' ? 4 : 2, 
+            fillOpacity: hovered === 'ZONA2' ? 0.4 : 0.2, 
+            dashArray: '5, 10' 
+          }}
+        >
+          <Tooltip sticky direction="top">
+            <div className="text-xs p-1">
+              <div className="font-bold border-b border-slate-200 mb-1">Zona Exterior (ZONA 2)</div>
+              <div className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: ruleZona2.color }}></span>
+                <span className="font-black">{ruleZona2.allowed ? 'ACCESO PERMITIDO' : 'ACCESO RESTRINGIDO'}</span>
+              </div>
+              <div className="text-[10px] text-slate-500 mt-1 max-w-37.5">
+                {ruleZona2.message || 'Consulta las normas específicas para tu etiqueta.'}
+              </div>
+            </div>
+          </Tooltip>
+        </Polygon>
 
-        <Polygon positions={POLY_ZONA_1} eventHandlers={{ mouseover: () => setHovered('ZONA1'), mouseout: () => setHovered(null) }}
-          pathOptions={{ fillColor: ruleZona1.color, color: ruleZona1.color, weight: hovered === 'ZONA1' ? 4 : 2, fillOpacity: hovered === 'ZONA1' ? 0.7 : 0.5 }} />
+        {/* ZONA 1 - CENTRO */}
+        <Polygon 
+          positions={POLY_ZONA_1} 
+          eventHandlers={{ mouseover: () => setHovered('ZONA1'), mouseout: () => setHovered(null) }}
+          pathOptions={{ 
+            fillColor: ruleZona1.color, 
+            color: ruleZona1.color, 
+            weight: hovered === 'ZONA1' ? 4 : 2, 
+            fillOpacity: hovered === 'ZONA1' ? 0.7 : 0.5 
+          }}
+        >
+          <Tooltip sticky direction="top">
+            <div className="text-xs p-1">
+              <div className="font-bold border-b border-slate-200 mb-1">Centro Histórico (ZONA 1)</div>
+              <div className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: ruleZona1.color }}></span>
+                <span className="font-black">{ruleZona1.allowed ? 'ACCESO PERMITIDO' : 'ACCESO RESTRINGIDO'}</span>
+              </div>
+              <div className="text-[10px] text-slate-500 mt-1 max-w-37.5">
+                {ruleZona1.message || 'Entrada limitada según etiqueta y destino.'}
+              </div>
+            </div>
+          </Tooltip>
+        </Polygon>
 
         {externalSearch && (
           <Marker position={externalSearch.coords}>
