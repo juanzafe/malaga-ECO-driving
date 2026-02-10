@@ -2,7 +2,7 @@ export type Badge = 'CERO' | 'ECO' | 'C' | 'B' | 'SIN' | null;
 
 export interface RuleResult {
   message?: string;
-  allowed: boolean; // Corregido: de 'any' a 'boolean'
+  allowed: boolean; 
   status: 'allowed' | 'warning' | 'prohibited' | 'neutral';
   messageKey: string;
   color: string;
@@ -47,10 +47,10 @@ export const checkAccess = (
 
   if (badge === 'C') {
     if (isFuture) {
-      return { allowed: true, status: 'warning', messageKey: 'parkingRequiredAll', color: '#eab308', icon: '🅿️' };
+      return { allowed: false, status: 'warning', messageKey: 'parkingRequiredAll', color: '#eab308', icon: '🅿️' };
     }
     if (zone === 'ZONA1') {
-      return { allowed: true, status: 'warning', messageKey: 'parkingCenterOnly', color: '#eab308', icon: '🅿️' };
+      return { allowed: false, status: 'warning', messageKey: 'parkingCenterOnly', color: '#eab308', icon: '🅿️' };
     }
     return { allowed: true, status: 'allowed', messageKey: 'freeAccess', color: '#16a34a', icon: '✅' };
   }
