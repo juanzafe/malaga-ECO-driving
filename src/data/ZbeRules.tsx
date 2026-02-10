@@ -1,8 +1,8 @@
 export type Badge = 'CERO' | 'ECO' | 'C' | 'B' | 'SIN' | null;
 
 export interface RuleResult {
-  message: string;
-  allowed: any;
+  message?: string;
+  allowed: boolean; // Corregido: de 'any' a 'boolean'
   status: 'allowed' | 'warning' | 'prohibited' | 'neutral';
   messageKey: string;
   color: string;
@@ -17,6 +17,7 @@ export const checkAccess = (
 ): RuleResult => {
   if (!badge) {
     return { 
+      allowed: false,
       status: 'neutral', 
       messageKey: 'selectBadge', 
       color: '#64748b', 
@@ -26,6 +27,7 @@ export const checkAccess = (
 
   if (isResident || badge === 'CERO' || badge === 'ECO') {
     return { 
+      allowed: true,
       status: 'allowed', 
       messageKey: 'freeAccess', 
       color: '#16a34a', 
@@ -35,6 +37,7 @@ export const checkAccess = (
 
   if (zone === 'OUTSIDE') {
     return { 
+      allowed: true,
       status: 'allowed', 
       messageKey: 'outsideZbe', 
       color: '#16a34a', 
@@ -44,25 +47,26 @@ export const checkAccess = (
 
   if (badge === 'C') {
     if (isFuture) {
-      return { status: 'warning', messageKey: 'parkingRequiredAll', color: '#eab308', icon: '🅿️' };
+      return { allowed: true, status: 'warning', messageKey: 'parkingRequiredAll', color: '#eab308', icon: '🅿️' };
     }
     if (zone === 'ZONA1') {
-      return { status: 'warning', messageKey: 'parkingCenterOnly', color: '#eab308', icon: '🅿️' };
+      return { allowed: true, status: 'warning', messageKey: 'parkingCenterOnly', color: '#eab308', icon: '🅿️' };
     }
-    return { status: 'allowed', messageKey: 'freeAccess', color: '#16a34a', icon: '✅' };
+    return { allowed: true, status: 'allowed', messageKey: 'freeAccess', color: '#16a34a', icon: '✅' };
   }
 
   if (badge === 'B') {
     if (isFuture) {
-      return { status: 'prohibited', messageKey: 'forbiddenEverywhere', color: '#dc2626', icon: '⛔' };
+      return { allowed: false, status: 'prohibited', messageKey: 'forbiddenEverywhere', color: '#dc2626', icon: '⛔' };
     }
     if (zone === 'ZONA1') {
-      return { status: 'prohibited', messageKey: 'forbiddenCenterB', color: '#dc2626', icon: '⛔' };
+      return { allowed: false, status: 'prohibited', messageKey: 'forbiddenCenterB', color: '#dc2626', icon: '⛔' };
     }
-    return { status: 'allowed', messageKey: 'freeAccess', color: '#16a34a', icon: '✅' };
+    return { allowed: true, status: 'allowed', messageKey: 'freeAccess', color: '#16a34a', icon: '✅' };
   }
 
   return { 
+    allowed: false,
     status: 'prohibited', 
     messageKey: 'forbiddenEverywhere', 
     color: '#dc2626', 
