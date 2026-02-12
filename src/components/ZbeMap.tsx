@@ -56,6 +56,7 @@ const FIXED_ZONA1_PARKINGS: Parking[] = [
 ];
 
 const OVERPASS_SERVERS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter'];
+
 export const NearbyParkings = ({ origin, onParkingsLoaded }: { origin: [number, number], onParkingsLoaded: (p: Parking[]) => void }) => {
   useEffect(() => {
     const controller = new AbortController();
@@ -116,7 +117,7 @@ export const ZbeMap = ({ isFuture, userLabel, isResident, externalSearch, extern
   const ruleZona2 = checkAccess(userLabel, isFuture, 'ZONA2', isResident);
 
   const openGoogleMaps = (dest: [number, number]) => {
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${dest[0]},${dest[1]}&travelmode=driving`;
+    const url = `http://www.google.com/maps/dir/?api=1&destination=${dest[0]},${dest[1]}&travelmode=driving`;
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
@@ -159,7 +160,8 @@ export const ZbeMap = ({ isFuture, userLabel, isResident, externalSearch, extern
             fillColor: ruleZona1.color, 
             color: ruleZona1.color, 
             weight: hovered === 'ZONA1' ? 4 : 2, 
-            fillOpacity: hovered === 'ZONA1' ? 0.7 : 0.5 
+            fillOpacity: hovered === 'ZONA1' ? 0.7 : 0.5,
+            className: 'zona-centro-historico'
           }}
         >
           <Tooltip sticky direction="top">
@@ -177,7 +179,7 @@ export const ZbeMap = ({ isFuture, userLabel, isResident, externalSearch, extern
         </Polygon>
 
         {externalSearch && (
-          <Marker position={externalSearch.coords}>
+          <Marker position={externalSearch.coords} zIndexOffset={1100}>
             <Tooltip permanent direction="top" offset={[0, -20]}>
               <span className="font-bold">📍 {externalSearch.address.split(',')[0]}</span>
             </Tooltip>
@@ -185,7 +187,7 @@ export const ZbeMap = ({ isFuture, userLabel, isResident, externalSearch, extern
         )}
 
         {parkingsToShow.map(p => (
-          <Marker key={p.id} position={p.coords} icon={ParkingIcon}>
+          <Marker key={p.id} position={p.coords} icon={ParkingIcon} zIndexOffset={1000} interactive={true}>
             <Popup closeButton={false}>
               <div className="p-1 flex flex-col items-center gap-2 min-w-35">
                 <p className="font-bold text-slate-800 m-0 text-center text-sm leading-tight">{p.name}</p>

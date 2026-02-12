@@ -74,9 +74,9 @@ function App() {
 
             <div className="bg-white rounded-4xl p-2 shadow-xl border overflow-hidden relative">
               {searchedLocation && currentRule && !isSheetOpen && (
-                <div className="lg:hidden absolute bottom-6 left-4 right-4 z-1000 animate-in fade-in slide-in-from-bottom-4">
+                <div className="lg:hidden absolute bottom-6 left-4 right-4 z-1001 pointer-events-none">
                   <div
-                    className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-2xl border-t-4"
+                    className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-2xl border-t-4 pointer-events-auto"
                     style={{ borderColor: currentRule.color }}
                   >
                     <div className="flex items-start justify-between">
