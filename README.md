@@ -41,7 +41,7 @@ Because traffic fines are at stake, accuracy is non-negotiable. I integrated **V
 1. **Clone the repository:**
    ```bash
    git clone [https://github.com/juanzafe/zbe-malaga-checker.git](https://github.com/juanzafe/zbe-malaga-checker.git)
-   2. **Install dependencies:** `npm install`
+2. **Install dependencies:** `npm install`
 3. **Run Logic test:** `npm run test`
 4. **Run Development Mode:** `npm run dev`
 
