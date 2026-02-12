@@ -1,37 +1,48 @@
-# ZBE Málaga Checker 🚗
+# 🚗 ZBE Málaga Checker: Smart Zone Navigator
 
-Una herramienta interactiva para saber si puedes entrar con tu coche en las nuevas Zonas de Bajas Emisiones (ZBE) de Málaga.
-
-El proyecto ayuda a los conductores a evitar multas consultando las restricciones actuales y las que entrarán en vigor en 2026 y 2027, dependiendo de su etiqueta ambiental y si son residentes.
+A practical, interactive tool designed to help drivers navigate the new Low Emission Zones (ZBE) in Málaga. This app translates complex environmental legislation into a simple, location-based interactive experience to help users avoid fines.
 
 <p align="center">
-  <img src="src/assets/Animationzbe.gif" alt="Demo de ZBE Málaga Checker" width="600">
+  <img src="src/assets/Animationzbe.gif" alt="ZBE Málaga Demo" width="600">
 </p>
-
-## Lo que hace la App:
-
-- **Mapa interactivo:** Visualiza los límites exactos de la ZONA 1 y ZONA 2 de Málaga mediante polígonos sobre el mapa.
-- **Calculadora de acceso:** Dices qué etiqueta tienes y si eres residente, y la app te dice si tienes el paso permitido, restringido o prohibido.
-- **Buscador de parkings:** Si buscas una dirección y no puedes entrar, la app consulta automáticamente la API de OpenStreetMap (Overpass) y te muestra los parkings públicos más cercanos.
-- **Modo futuro:** Puedes ver cómo cambiarán las reglas en enero de 2026 para planificarte con antelación.
-- **Diseño móvil:** Interfaz pensada para usarse cómodamente desde el móvil con paneles deslizables.
-
-## Tecnologías que he usado:
-
-- **React 18** y **TypeScript** para toda la estructura y lógica.
-- **Leaflet** y **React-Leaflet** para la gestión del mapa y las zonas.
-- **Tailwind CSS** para un diseño limpio y rápido.
-- **i18next** para tener la app tanto en español como en inglés.
-- **Overpass API** para obtener datos de parkings en tiempo real.
-
-## Instalación:
-
-Si quieres probarlo en local, solo tienes que clonar el repo y lanzarlo:
-
-1. `git clone https://github.com/juanzafe/nombre-de-tu-repo.git`
-2. `npm install`
-3. `npm run dev`
 
 ---
 
-Hecho por **Juan Zamudio** - Frontend Developer.
+## 🌟 The Problem & The Solution
+Low Emission Zones are confusing. Drivers often don't know which "Label" they have, nor do they want to read through official government PDFs to find out if they can enter a specific street.
+
+**ZBE Málaga Checker** provides immediate clarity. By simply entering a vehicle's year and fuel type, the app gives you a "Yes/No" answer based on your exact location and the current (or future) laws.
+
+### 🚀 Core Features
+
+* **Smart Label Calculator:** Don't know your label? No problem. Enter your car’s registration year and fuel type, and the app automatically determines your environmental sticker and the specific rules that apply to you.
+* **Interactive Map & Geolocation:** Visualize the exact boundaries of Málaga's **ZONE 1 and ZONE 2**. Using your phone's GPS, the app can tell you in real-time if your current location or a specific destination is restricted.
+* **Future-Proof Planning (2026/2027):** Rules change over time. The app includes a "Future Mode" to see how restrictions will tighten in 2026 and 2027, specifically handling the different rules for **residents**.
+* **Smart Parking Finder:** If access is restricted for your vehicle, the app automatically queries the **OpenStreetMap (Overpass) API** to guide you to the nearest public parking lots outside the restricted area.
+* **Bilingual Support:** Fully accessible in **English and Spanish**.
+
+---
+
+## 🧪 Reliability & Testing (Vitest)
+Because traffic fines are at stake, accuracy is non-negotiable. I integrated **Vitest** to run unit and integration tests on the restriction algorithms. This ensures that the complex logic involving vehicle age, fuel types, residency status, and current/future dates is 100% accurate and bug-free.
+
+---
+
+## 🛠️ Tech Stack
+* **Frontend:** `React 18`, `TypeScript`, `Tailwind CSS`.
+* **Maps:** `Leaflet` & `React-Leaflet` for polygon rendering.
+* **Testing:** `Vitest` for logic verification.
+* **Data Sources:** `Overpass API` (OpenStreetMap) for live parking data.
+* **Localization:** `i18next`.
+
+---
+
+## ⚙️ Installation & Setup
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/juanzafe/zbe-malaga-checker.git](https://github.com/juanzafe/zbe-malaga-checker.git)
+   2. **Install dependencies:** `npm install`
+3. **Run Logic test:** `npm run test`
+4. **Run Development Mode:** `npm run dev`
+
+**Developed by Juan Zamudio – Real solutions for everyday professional problems.**
