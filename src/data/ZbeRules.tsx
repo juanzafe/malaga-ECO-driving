@@ -13,7 +13,8 @@ export const checkAccess = (
   badge: Badge,
   isFuture: boolean,
   zone: 'ZONA1' | 'ZONA2' | 'OUTSIDE',
-  isResident: boolean
+  isResident: boolean,
+  cityId: string
 ): RuleResult => {
   if (!badge) {
     return { 
@@ -23,6 +24,10 @@ export const checkAccess = (
       color: '#64748b', 
       icon: '🔍' 
     };
+  }
+
+  if (cityId === 'madrid' && badge === 'SIN') {
+    return { allowed: false, status: 'prohibited', messageKey: 'forbiddenEverywhere', color: '#dc2626', icon: '⛔' };
   }
 
   if (isResident || badge === 'CERO' || badge === 'ECO') {
@@ -74,14 +79,24 @@ export const checkAccess = (
   };
 };
 
-export const getZoneFromCoords = (coords: [number, number]): 'ZONA1' | 'ZONA2' | 'OUTSIDE' => {
+export const getZoneFromCoords = (coords: [number, number], cityId: string): 'ZONA1' | 'ZONA2' | 'OUTSIDE' => {
   const [lat, lng] = coords;
   
-  const isInsideZ1 = lat > 36.719 && lat < 36.725 && lng > -4.426 && lng < -4.416;
-  if (isInsideZ1) return 'ZONA1';
-  
-  const isInsideZ2 = lat > 36.715 && lat < 36.730 && lng > -4.430 && lng < -4.410;
-  if (isInsideZ2) return 'ZONA2';
+  if (cityId === 'malaga') {
+    const isInsideZ1 = lat > 36.719 && lat < 36.725 && lng > -4.426 && lng < -4.416;
+    if (isInsideZ1) return 'ZONA1';
+    const isInsideZ2 = lat > 36.715 && lat < 36.730 && lng > -4.430 && lng < -4.410;
+    if (isInsideZ2) return 'ZONA2';
+  }
+
+  if (cityId === 'madrid') {
+    // Aproximación de Distrito Centro (Madrid Central)
+    const isInsideZ1 = lat > 40.405 && lat < 40.430 && lng > -3.715 && lng < -3.690;
+    if (isInsideZ1) return 'ZONA1';
+    // El resto de Madrid dentro de la M-30
+    const isInsideZ2 = lat > 40.380 && lat < 40.470 && lng > -3.750 && lng < -3.650;
+    if (isInsideZ2) return 'ZONA2';
+  }
   
   return 'OUTSIDE';
 };

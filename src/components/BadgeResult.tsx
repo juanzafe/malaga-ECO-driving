@@ -4,35 +4,40 @@ interface Props {
   badge: 'ECO' | 'CERO' | 'C' | 'B' | 'SIN' | null;
   isFuture: boolean;
   isResident: boolean;
+  cityId: string;
 }
 
-export const BadgeResult = ({ badge, isFuture, isResident }: Props) => {
+export const BadgeResult = ({ badge, isFuture, isResident, cityId }: Props) => {
   useTranslation();
   if (!badge) return null;
 
   const getInfo = () => {
-    if (isResident) return { 
-      title: "Acceso Total Residente", 
-      desc: "Como residente en Málaga, puedes circular por ambas zonas con cualquier etiqueta hasta 2027.",
-      color: "bg-emerald-50 border-emerald-200 text-emerald-800",
-      icon: "🏠" 
-    };
+    if (isResident) {
+      const isMadridA = cityId === 'madrid' && badge === 'SIN';
+      return { 
+        title: isMadridA ? "Acceso Prohibido" : "Acceso Residente", 
+        desc: isMadridA 
+          ? "En Madrid, desde 2025/26 incluso los residentes sin etiqueta tienen prohibido circular."
+          : `Como residente en ${cityId === 'malaga' ? 'Málaga' : 'Madrid'}, tienes permisos especiales gestionados por tu ayuntamiento.`,
+        color: isMadridA ? "bg-red-50 border-red-200 text-red-800" : "bg-emerald-50 border-emerald-200 text-emerald-800",
+        icon: isMadridA ? "⛔" : "🏠" 
+      };
+    }
 
+    // Switch de etiquetas
     switch (badge) {
       case 'CERO':
       case 'ECO':
         return { 
           title: "Sin restricciones", 
-          desc: "Puedes circular y aparcar libremente por todo el centro y el anillo exterior.",
+          desc: "Máxima libertad. Puedes circular y aparcar en todas las zonas ZBE sin restricciones.",
           color: "bg-green-50 border-green-200 text-green-800",
           icon: "🍀"
         };
       case 'C':
         return { 
-          title: isFuture ? "Solo Parking (2027)" : "Libre en Anillo, Parking en Centro", 
-          desc: isFuture 
-            ? "En 2027, tu etiqueta C solo podrá entrar a las ZBE si vas directo a un parking público." 
-            : "Hoy: Puedes circular por el anillo exterior. Si entras al Centro Histórico (Zona 1), debes ir a un parking.",
+          title: isFuture ? "Solo Parking (2027)" : "Libre en Zonas, Parking en Centro", 
+          desc: "Puedes moverte por la ZBE, pero para entrar al corazón de la ciudad (Zona 1) es obligatorio aparcar en un parking público.",
           color: "bg-blue-50 border-blue-200 text-blue-800",
           icon: "🅿️"
         };
@@ -54,7 +59,6 @@ export const BadgeResult = ({ badge, isFuture, isResident }: Props) => {
         };
     }
   };
-
 
   const info = getInfo();
   if (!info) return null;

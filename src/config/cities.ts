@@ -26,16 +26,18 @@ export const CITIES = {
     }
   },
   madrid: {
-    id: 'madrid',
-    name: 'Madrid',
-    coords: [40.4168, -3.7038] as LatLngTuple,
-    zoom: 13,
-    // Dejamos Madrid vacío por ahora para que no falle
-    polygons: {
-      zona1: [], 
-      zona2: [] 
-    }
+  id: 'madrid',
+  name: 'Madrid',
+  coords: [40.416775, -3.703790] as LatLngTuple,
+  zoom: 14,
+  polygons: {
+    zona1: [
+      [40.4285, -3.7115], [40.4295, -3.7050], [40.4260, -3.6900],
+      [40.4080, -3.6920], [40.4050, -3.7050], [40.4080, -3.7150]
+    ] as LatLngTuple[],
+    zona2: [] 
   }
+}
 };
 
 export type CityKey = keyof typeof CITIES;

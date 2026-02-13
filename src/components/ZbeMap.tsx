@@ -5,7 +5,7 @@ import L from 'leaflet';
 import { type Badge, checkAccess } from '../data/ZbeRules';
 import type { Parking } from '../types/Parking';
 
-// --- ICONOS (Se mantienen igual) ---
+// --- ICONOS ---
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
@@ -38,7 +38,7 @@ interface OverpassResponse {
   elements: OverpassElement[];
 }
 
-// 💡 Sub-componente para mover la cámara cuando cambias de ciudad
+// Sub-componente para mover la cámara cuando cambias de ciudad
 function ChangeView({ center, zoom }: { center: LatLngTuple, zoom: number }) {
   const map = useMap();
   useEffect(() => {
@@ -49,8 +49,14 @@ function ChangeView({ center, zoom }: { center: LatLngTuple, zoom: number }) {
 
 const OVERPASS_SERVERS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter'];
 
-// --- COMPONENTE NEARBY PARKINGS (Se mantiene igual, ya es dinámico por el 'origin') ---
-export const NearbyParkings = ({ origin, onParkingsLoaded }: { origin: [number, number], onParkingsLoaded: (p: Parking[]) => void }) => {
+// --- COMPONENTE NEARBY PARKINGS ---
+export const NearbyParkings = ({ 
+  origin, 
+  onParkingsLoaded 
+}: { 
+  origin: [number, number], 
+  onParkingsLoaded: (p: Parking[]) => void 
+}) => {
   useEffect(() => {
     const controller = new AbortController();
     let isMounted = true;
@@ -72,7 +78,7 @@ export const NearbyParkings = ({ origin, onParkingsLoaded }: { origin: [number, 
               if (!lat || !lon) return null;
               return { id: String(el.id), name: el.tags?.name || 'Parking público', coords: [lat, lon] };
             })
-            .filter((p): p is Parking => p !== null); // Aquí quitamos el filtro de zona para que sea genérico
+            .filter((p): p is Parking => p !== null);
 
           onParkingsLoaded(parsed.slice(0, 15));
           return;
@@ -87,20 +93,22 @@ export const NearbyParkings = ({ origin, onParkingsLoaded }: { origin: [number, 
   return null;
 };
 
-// --- COMPONENTE ZBEMAP ACTUALIZADO ---
+// --- COMPONENTE ZBEMAP ---
 export const ZbeMap = ({ 
   isFuture, 
   userLabel, 
   isResident, 
+  cityId,
   externalSearch, 
   externalParkings,
-  cityCenter,  // <-- NUEVA PROP
-  cityZoom,    // <-- NUEVA PROP
-  polygons     // <-- NUEVA PROP (un objeto con { zona1: [], zona2: [] })
+  cityCenter,
+  cityZoom,
+  polygons
 }: {
   isFuture: boolean;
   userLabel: Badge;
   isResident: boolean;
+  cityId: string;
   externalSearch?: { coords: [number, number]; address: string } | null;
   externalParkings?: Parking[];
   cityCenter: LatLngTuple;
@@ -111,8 +119,8 @@ export const ZbeMap = ({
   const [localParkings, setLocalParkings] = useState<Parking[]>([]);
 
   const parkingsToShow = externalParkings || localParkings;
-  const ruleZona1 = checkAccess(userLabel, isFuture, 'ZONA1', isResident);
-  const ruleZona2 = checkAccess(userLabel, isFuture, 'ZONA2', isResident);
+  const ruleZona1 = checkAccess(userLabel, isFuture, 'ZONA1', isResident, cityId);
+  const ruleZona2 = checkAccess(userLabel, isFuture, 'ZONA2', isResident, cityId);
 
   const openGoogleMaps = (dest: [number, number]) => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${dest[0]},${dest[1]}&travelmode=driving`;
@@ -131,7 +139,7 @@ export const ZbeMap = ({
         
         <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" attribution="© OSM" />
 
-        {/* ZONA 2 - EXTERIOR (DInámica) */}
+        {/* ZONA 2 - EXTERIOR */}
         {polygons.zona2.length > 0 && (
           <Polygon 
             positions={polygons.zona2} 
@@ -146,7 +154,7 @@ export const ZbeMap = ({
           />
         )}
 
-        {/* ZONA 1 - CENTRO (Dinámica) */}
+        {/* ZONA 1 - CENTRO */}
         {polygons.zona1.length > 0 && (
           <Polygon 
             positions={polygons.zona1} 
@@ -160,7 +168,7 @@ export const ZbeMap = ({
           />
         )}
 
-        {/* Marcador de búsqueda y Parkings se mantienen igual... */}
+        {/* Marcador de búsqueda */}
         {externalSearch && (
           <Marker position={externalSearch.coords} zIndexOffset={1100}>
             <Tooltip permanent direction="top" offset={[0, -20]}>
@@ -169,6 +177,7 @@ export const ZbeMap = ({
           </Marker>
         )}
 
+        {/* Parkings */}
         {parkingsToShow.map(p => (
           <Marker key={p.id} position={p.coords} icon={ParkingIcon} zIndexOffset={1000}>
             <Popup closeButton={false}>

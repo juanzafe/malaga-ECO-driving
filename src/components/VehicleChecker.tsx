@@ -8,12 +8,14 @@ export type Badge = 'ECO' | 'CERO' | 'C' | 'B' | 'SIN' | null;
 interface VehicleCheckerProps {
   isFuture: boolean;
   isResident: boolean;
+  cityId: string;
   onLabelCalculated: (badge: Badge) => void;
 }
 
 export const VehicleChecker = ({
   isFuture,
   isResident,
+  cityId,
   onLabelCalculated,
 }: VehicleCheckerProps) => {
   const { t } = useTranslation();
@@ -77,7 +79,12 @@ export const VehicleChecker = ({
         onCalculate={calculateBadge}
       />
 
-      <BadgeResult badge={badge} isFuture={isFuture} isResident={isResident} />
+      <BadgeResult 
+        badge={badge} 
+        isFuture={isFuture} 
+        isResident={isResident} 
+        cityId={cityId}
+      />
     </div>
   );
 };

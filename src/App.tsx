@@ -19,8 +19,7 @@ function CityView() {
   const { t } = useTranslation();
   const cityConfig = CITIES[cityId as CityKey];
   
-
-const [isSheetOpen, setIsSheetOpen] = useState(false)
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [nearbyParkings, setNearbyParkings] = useState<Parking[]>([])
   const [isFuture, setIsFuture] = useState(false)
   const [isResident, setIsResident] = useState(false)
@@ -30,10 +29,12 @@ const [isSheetOpen, setIsSheetOpen] = useState(false)
     address: string
   } | null>(null)
 
-    const currentRule = searchedLocation
-    ? checkAccess(currentBadge, isFuture, getZoneFromCoords(searchedLocation.coords), isResident)
+  // Validar que cityId sea válido antes de usar
+  if (!cityConfig) return <Navigate to="/malaga" />;
+
+  const currentRule = searchedLocation
+    ? checkAccess(currentBadge, isFuture, getZoneFromCoords(searchedLocation.coords, cityId!), isResident, cityId!)
     : null
-    if (!cityConfig) return <Navigate to="/malaga" />;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 overflow-x-hidden">
@@ -51,6 +52,7 @@ const [isSheetOpen, setIsSheetOpen] = useState(false)
             <VehicleChecker
               isFuture={isFuture}
               isResident={isResident}
+              cityId={cityId!}
               onLabelCalculated={setCurrentBadge}
             />
           </div>
@@ -116,6 +118,7 @@ const [isSheetOpen, setIsSheetOpen] = useState(false)
                   isFuture={isFuture}
                   userLabel={currentBadge}
                   isResident={isResident}
+                  cityId={cityId!}
                   externalSearch={searchedLocation}
                   externalParkings={nearbyParkings}
                 />
@@ -162,6 +165,7 @@ const [isSheetOpen, setIsSheetOpen] = useState(false)
             <VehicleChecker
               isFuture={isFuture}
               isResident={isResident}
+              cityId={cityId!}
               onLabelCalculated={setCurrentBadge}
             />
           </section>
