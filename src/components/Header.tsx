@@ -8,8 +8,9 @@ interface HeaderProps {
     isResident: boolean;
     setIsFuture: (value: boolean) => void;
     setIsResident: (value: boolean) => void;
+    cityName:string;
 }
-export const Header = ({ isFuture, isResident, setIsFuture, setIsResident }: HeaderProps) => {
+export const Header = ({ isFuture, isResident, setIsFuture, setIsResident, cityName }: HeaderProps) => {
 
  const { t } = useTranslation();
   return (
@@ -20,7 +21,7 @@ export const Header = ({ isFuture, isResident, setIsFuture, setIsResident }: Hea
   <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col text-white">
     <h1 className="text-xl font-black uppercase tracking-tight">
       <span>🌿</span>
-      {t('appName')}
+      ZBE {cityName}
     </h1>
 
     <p className="text-xs text-emerald-100 mt-1 font-medium">

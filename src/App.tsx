@@ -10,10 +10,17 @@ import { checkAccess, getZoneFromCoords } from './data/ZbeRules'
 import { Header } from './components/Header'
 import type { Parking } from './types/Parking'
 import { NearbyParkings } from './components/NearbyParkings'
+import {useParams, Navigate, BrowserRouter, Routes, Route} from 'react-router-dom'
+import { CITIES, type CityKey } from './config/cities'
 
-function App() {
-  const { t } = useTranslation()
-  const [isSheetOpen, setIsSheetOpen] = useState(false)
+
+function CityView() {
+  const { cityId } = useParams<{ cityId: string }>();
+  const { t } = useTranslation();
+  const cityConfig = CITIES[cityId as CityKey];
+  
+
+const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [nearbyParkings, setNearbyParkings] = useState<Parking[]>([])
   const [isFuture, setIsFuture] = useState(false)
   const [isResident, setIsResident] = useState(false)
@@ -23,9 +30,10 @@ function App() {
     address: string
   } | null>(null)
 
-  const currentRule = searchedLocation
+    const currentRule = searchedLocation
     ? checkAccess(currentBadge, isFuture, getZoneFromCoords(searchedLocation.coords), isResident)
     : null
+    if (!cityConfig) return <Navigate to="/malaga" />;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 overflow-x-hidden">
@@ -34,6 +42,7 @@ function App() {
         isResident={isResident}
         setIsFuture={setIsFuture}
         setIsResident={setIsResident}
+        cityName={cityConfig.name}
       />
 
       <main className="max-w-7xl mx-auto px-4 py-6 mb-20">
@@ -101,6 +110,9 @@ function App() {
 
               <div className="relative h-[65vh] lg:h-150 z-0">
                 <ZbeMap
+                  cityCenter={cityConfig.coords}
+                  cityZoom={cityConfig.zoom}
+                  polygons={cityConfig.polygons}
                   isFuture={isFuture}
                   userLabel={currentBadge}
                   isResident={isResident}
@@ -174,7 +186,19 @@ function App() {
         </div>
       </MobileBottomSheet>
     </div>
-  )
+  );
+}
+
+
+function App() {
+    return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/:cityId" element={<CityView />} />
+        <Route path="/" element={<Navigate to="/malaga" />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App
