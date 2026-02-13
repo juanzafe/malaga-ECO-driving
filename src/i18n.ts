@@ -12,6 +12,24 @@ i18n.use(initReactI18next).init({
         year2026: '2026',
         year2027: '2027',
         configure: 'Configurar vehículo',
+        
+        // Nuevas traducciones para CitySelector
+        citySelector: {
+          title: 'Calculadora ZBE',
+          selectCity: 'Selecciona tu ciudad',
+          malagaDesc: 'Costa del Sol',
+          malagaStats: '2 zonas ZBE activas',
+          madridDesc: 'Capital de España',
+          madridStats: 'Madrid Central + ZBE',
+          vehicleTitle: 'Tu vehículo',
+          vehicleDesc: 'Calcula la etiqueta ambiental según año y combustible',
+          searchTitle: 'Busca calles',
+          searchDesc: 'Comprueba si puedes acceder a una dirección específica',
+          parkingTitle: 'Parkings',
+          parkingDesc: 'Encuentra parkings públicos cercanos a tu destino',
+          footer: 'Información actualizada según normativas 2025-2027'
+        },
+        
         months: {
           january: "Enero", february: "Febrero", march: "Marzo", april: "Abril",
           may: "Mayo", june: "Junio", july: "Julio", august: "Agosto",
@@ -98,6 +116,24 @@ i18n.use(initReactI18next).init({
         year2026: '2026',
         year2027: '2027',
         configure: 'Configure vehicle',
+        
+        // New translations for CitySelector
+        citySelector: {
+          title: 'LEZ Calculator',
+          selectCity: 'Select your city',
+          malagaDesc: 'Costa del Sol',
+          malagaStats: '2 active LEZ zones',
+          madridDesc: 'Capital of Spain',
+          madridStats: 'Madrid Central + LEZ',
+          vehicleTitle: 'Your vehicle',
+          vehicleDesc: 'Calculate environmental badge based on year and fuel',
+          searchTitle: 'Search streets',
+          searchDesc: 'Check if you can access a specific address',
+          parkingTitle: 'Parking',
+          parkingDesc: 'Find public parking near your destination',
+          footer: 'Information updated according to 2025-2027 regulations'
+        },
+        
         months: {
           january: "January", february: "February", march: "March", april: "April",
           may: "May", june: "June", july: "July", august: "August",
@@ -106,8 +142,8 @@ i18n.use(initReactI18next).init({
         location: {
           useCurrent: "Use my current location",
           currentPosition: "Your current location",
-          permissionDenied: "We couldn’t access your location",
-          notSupported: "Your browser doesn’t support geolocation"
+          permissionDenied: "We couldn't access your location",
+          notSupported: "Your browser doesn't support geolocation"
         },
 
         heroTitle: 'LEZ Access Checker',
