@@ -58,10 +58,11 @@ function CityView() {
           </div>
 
           <div className="lg:col-span-8 flex flex-col gap-6">
-            <div className="hidden lg:block bg-white/5 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/10 space-y-4">
+            <div className="hidden lg:block bg-white/5 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/10 space-y-4 relative z-1000">
               <StreetSearch
                 isResident={isResident}
                 isFuture={isFuture}
+                cityId={cityId!}
                 userLabel={currentBadge}
                 onStreetSelected={(coords, address) => {
                   setNearbyParkings([])
@@ -181,6 +182,7 @@ function CityView() {
             <StreetSearch
               isResident={isResident}
               isFuture={isFuture}
+              cityId={cityId!}
               userLabel={currentBadge}
               onStreetSelected={(coords, address) => {
                 setNearbyParkings([])

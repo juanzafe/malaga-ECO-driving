@@ -7,6 +7,7 @@ interface Props {
   isFuture: boolean;
   userLabel: Badge;
   isResident: boolean;
+  cityId: string;
 }
 
 interface NominatimResult {
@@ -16,18 +17,33 @@ interface NominatimResult {
   type: string;
 }
 
-const MALAGA_BOUNDS = '-4.5539,36.7845,-4.3005,36.6596';
+// Bounds para cada ciudad
+const CITY_BOUNDS: Record<string, string> = {
+  malaga: '-4.5539,36.7845,-4.3005,36.6596',
+  madrid: '-3.8882,40.5868,-3.5179,40.3119'
+};
 
-export const StreetSearch = ({ onStreetSelected }: Props) => {
+const CITY_NAMES: Record<string, string> = {
+  malaga: 'Málaga',
+  madrid: 'Madrid'
+};
+
+export const StreetSearch = ({ onStreetSelected, cityId }: Props) => {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<NominatimResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [gpsLoading, setGpsLoading] = useState(false);
   const [gpsError, setGpsError] = useState<string | null>(null);
+  const [isCurrentLocation, setIsCurrentLocation] = useState(false);
 
   const isManualChange = useRef(false);
 
+  const cityBounds = CITY_BOUNDS[cityId] || CITY_BOUNDS.malaga;
+  const cityName = CITY_NAMES[cityId] || 'Málaga';
+
+  // Valor computed: si es ubicación actual, mostrar texto traducido
+  const displayQuery = isCurrentLocation ? t('location.currentPosition') : query;
 
   useEffect(() => {
     if (isManualChange.current) {
@@ -43,8 +59,8 @@ export const StreetSearch = ({ onStreetSelected }: Props) => {
 
       const url =
         `https://nominatim.openstreetmap.org/search?` +
-        `format=json&q=${encodeURIComponent(query + ', Málaga')}&` +
-        `viewbox=${MALAGA_BOUNDS}&bounded=1&addressdetails=1&limit=5`;
+        `format=json&q=${encodeURIComponent(query + ', ' + cityName)}&` +
+        `viewbox=${cityBounds}&bounded=1&addressdetails=1&limit=5`;
 
       fetch(url, { signal: controller.signal })
         .then((res) => res.json())
@@ -61,7 +77,7 @@ export const StreetSearch = ({ onStreetSelected }: Props) => {
       clearTimeout(timeoutId);
       controller.abort();
     };
-  }, [query]);
+  }, [query, cityBounds, cityName]);
 
   const handleSelect = (item: NominatimResult) => {
     const lat = parseFloat(item.lat);
@@ -69,6 +85,7 @@ export const StreetSearch = ({ onStreetSelected }: Props) => {
 
     isManualChange.current = true; 
     setResults([]);
+    setIsCurrentLocation(false);
     setQuery(item.display_name.split(',')[0]);
 
     onStreetSelected([lat, lon], item.display_name);
@@ -90,7 +107,8 @@ export const StreetSearch = ({ onStreetSelected }: Props) => {
         isManualChange.current = true;
         setGpsLoading(false);
         setResults([]);
-        setQuery(t('location.currentPosition'));
+        setIsCurrentLocation(true);
+        setQuery(''); // Limpiar query, displayQuery mostrará la traducción
 
         onStreetSelected([latitude, longitude], t('location.currentPosition'));
       },
@@ -104,22 +122,24 @@ export const StreetSearch = ({ onStreetSelected }: Props) => {
 
   return (
     <div className="relative">
-      <label className="mb-3 block text-xs font-black uppercase tracking-widest text-slate-400">
+      <label className="mb-3 block text-xs font-black uppercase tracking-widest text-slate-300">
         {t('checkAddress')}
       </label>
 
       <div className="relative">
         <input
-          value={query}
+          value={displayQuery}
           onChange={(e) => {
             isManualChange.current = false;
+            setIsCurrentLocation(false);
             setQuery(e.target.value);
             if (e.target.value.trim().length < 3) setResults([]);
           }}
           placeholder={t('streetPlaceholder')}
-          className="w-full rounded-2xl border-2 border-slate-100 bg-slate-50 px-5 py-4 text-sm shadow-sm transition-all focus:border-emerald-500 focus:bg-white focus:outline-none"
+          className="w-full rounded-2xl border-2 border-white/20 bg-white/10 backdrop-blur-md px-5 py-4 text-sm text-white placeholder-slate-400
+                   shadow-lg transition-all focus:border-emerald-500/50 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
         />
-        <span className="absolute right-4 top-4 opacity-30">
+        <span className="absolute right-4 top-4 text-slate-400">
           {loading ? '⏳' : '🔍'}
         </span>
       </div>
@@ -128,24 +148,25 @@ export const StreetSearch = ({ onStreetSelected }: Props) => {
         type="button"
         onClick={handleUseCurrentLocation}
         disabled={gpsLoading}
-        className="mt-3 flex cursor-pointer items-center gap-2 text-sm font-bold text-emerald-600 transition hover:text-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+        className="mt-3 flex cursor-pointer items-center gap-2 text-sm font-bold text-emerald-400 transition hover:text-emerald-300 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {gpsLoading ? '⏳' : '📍'} {t('location.useCurrent')}
       </button>
 
       {gpsError && (
-        <p className="mt-2 text-xs font-medium text-red-500">{gpsError}</p>
+        <p className="mt-2 text-xs font-medium text-red-400">{gpsError}</p>
       )}
 
       {results.length > 0 && (
-        <ul className="absolute z-3000 mt-2 w-full animate-in fade-in zoom-in-95 overflow-hidden rounded-2xl border bg-white shadow-2xl">
+        <ul className="absolute z-50 mt-2 w-full animate-in fade-in zoom-in-95 overflow-hidden rounded-2xl border border-white/20 bg-slate-800/95 backdrop-blur-xl shadow-2xl"
+            style={{ zIndex: 10000 }}>
           {results.map((r, i) => (
             <li
               key={i}
               onClick={() => handleSelect(r)}
-              className="cursor-pointer border-b border-slate-50 px-4 py-4 transition-colors last:border-0 hover:bg-emerald-50"
+              className="cursor-pointer border-b border-white/10 px-4 py-4 transition-colors last:border-0 hover:bg-emerald-500/20"
             >
-              <p className="text-sm font-bold text-slate-700">
+              <p className="text-sm font-bold text-white">
                 {r.display_name.split(',')[0]}
               </p>
               <p className="truncate text-[10px] text-slate-400">

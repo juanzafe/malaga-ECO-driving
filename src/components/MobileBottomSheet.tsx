@@ -44,9 +44,15 @@ export function MobileBottomSheet({ children, isOpen, setOpen }: Props) {
           )}
         </div>
 
-        {/* Content */}
-        <div className="px-6 pb-10 h-[calc(85vh-85px)] overflow-y-auto 
-                      scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
+        {/* Content - Siempre renderizado en el DOM para tests, pero oculto visualmente */}
+        <div 
+          className="px-6 pb-10 h-[calc(85vh-85px)] overflow-y-auto 
+                     scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent"
+          style={{ 
+            visibility: isOpen ? 'visible' : 'hidden',
+            pointerEvents: isOpen ? 'auto' : 'none'
+          }}
+        >
           {children}
         </div>
       </div>
