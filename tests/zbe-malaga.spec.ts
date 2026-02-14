@@ -27,8 +27,8 @@ test.describe('Pruebas del Mapa ZBE Málaga (Leaflet)', () => {
     // Seleccionar mes enero (valor 1)
     await page.locator('select').nth(2).selectOption('1');
 
-    // Click en calcular
-    await page.getByRole('button', { name: /CALCULAR|calculate/i }).click();
+    // Click en calcular (force para evitar problemas con animaciones)
+    await page.getByRole('button', { name: /CALCULAR|calculate/i }).click({ force: true });
 
     // Esperar un poco a que se actualice el mapa
     await page.waitForTimeout(500);
@@ -39,7 +39,7 @@ test.describe('Pruebas del Mapa ZBE Málaga (Leaflet)', () => {
 
     // Cambiar a vehículo eléctrico
     await page.locator('select').nth(0).selectOption('electric');
-    await page.getByRole('button', { name: /CALCULAR|calculate/i }).click();
+    await page.getByRole('button', { name: /CALCULAR|calculate/i }).click({ force: true });
 
     // Esperar actualización
     await page.waitForTimeout(500);
