@@ -25,7 +25,7 @@ export const BadgeForm = ({ onFuelChange, onYearChange, onMonthChange, onCalcula
     <div className="space-y-5">
       {/* Fuel Type */}
       <div>
-        <label className="block text-sm font-bold text-slate-300 mb-2">
+        <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">
           {t('fuelType')}
         </label>
         <select 
@@ -52,9 +52,9 @@ export const BadgeForm = ({ onFuelChange, onYearChange, onMonthChange, onCalcula
       </div>
 
       {/* Year and Month Grid */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 items-end">
         <div>
-          <label className="block text-sm font-bold text-slate-300 mb-2">
+          <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">
             {t('registrationYear')}
           </label>
           <select 
@@ -80,7 +80,8 @@ export const BadgeForm = ({ onFuelChange, onYearChange, onMonthChange, onCalcula
         </div>
 
         <div>
-          <label className="block text-sm font-bold text-slate-300 mb-2">
+          <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider"
+>
             {t('registrationMonth')}
           </label>
           <select 
@@ -110,14 +111,19 @@ export const BadgeForm = ({ onFuelChange, onYearChange, onMonthChange, onCalcula
 
       {/* Calculate Button */}
       <button 
-        onClick={onCalculate}
-        className="w-full bg-linear-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 
-                 text-white font-black py-4 rounded-xl shadow-lg shadow-emerald-500/30
-                 transition-all active:scale-95 uppercase tracking-wider
-                 hover:shadow-xl hover:shadow-emerald-500/40 transform hover:-translate-y-0.5"
-      >
-        ✨ {t('calculate')}
-      </button>
+  onClick={onCalculate}
+  className="w-full bg-linear-to-r from-emerald-500 via-teal-500 to-cyan-500
+             hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600
+             text-white font-black py-4 rounded-xl
+             shadow-lg shadow-emerald-500/30
+             transition-all duration-300
+             active:scale-95 uppercase tracking-widest
+             hover:shadow-xl hover:shadow-emerald-500/40
+             transform hover:-translate-y-1"
+>
+  ✨ {t('calculate')}
+</button>
+
     </div>
   );
 };

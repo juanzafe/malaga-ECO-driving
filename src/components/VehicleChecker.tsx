@@ -1,16 +1,11 @@
-import { useState } from 'react';
-import { BadgeForm } from './BadgeForm';
-import { BadgeResult } from './BadgeResult';
-import { useTranslation } from 'react-i18next';
+import { useState } from 'react'; 
+import { BadgeForm } from './BadgeForm'; 
+import { BadgeResult } from './BadgeResult'; 
+import { useTranslation } from 'react-i18next'; 
 
-export type Badge = 'ECO' | 'CERO' | 'C' | 'B' | 'SIN' | null;
-
-interface VehicleCheckerProps {
-  isFuture: boolean;
-  isResident: boolean;
-  cityId: string;
-  onLabelCalculated: (badge: Badge) => void;
-}
+export type Badge = 'ECO' | 'CERO' | 'C' | 'B' | 'SIN' | null; 
+interface VehicleCheckerProps 
+{ isFuture: boolean; isResident: boolean; cityId: string; onLabelCalculated: (badge: Badge) => void; }
 
 export const VehicleChecker = ({
   isFuture,
@@ -53,38 +48,47 @@ export const VehicleChecker = ({
   };
 
   return (
-    <div className="p-6 bg-white rounded-2xl shadow-xl max-w-md mx-auto border">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-slate-800">
-          {t('badgeFinder')}
-        </h2>
+    <div className="relative max-w-lg mx-auto">
 
-        {badge && (
-          <button
-            onClick={() => {
-              setBadge(null);
-              onLabelCalculated(null);
-            }}
-            className="text-xs text-slate-400 underline hover:text-slate-600"
-          >
-            {t('clear')}
-          </button>
-        )}
+      {/* Glow background */}
+      <div className="absolute inset-0 bg-linear-to-r from-emerald-500/20 to-blue-500/20 blur-3xl opacity-40 rounded-3xl -z-10" />
+
+      <div className="p-8 bg-white/5 backdrop-blur-xl rounded-3xl 
+                      border border-white/10 shadow-2xl
+                      hover:border-white/20 transition-all duration-500">
+
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-2xl font-black text-white tracking-tight">
+            🚗 {t('badgeFinder')}
+          </h2>
+
+          {badge && (
+            <button
+              onClick={() => {
+                setBadge(null);
+                onLabelCalculated(null);
+              }}
+              className="text-xs text-slate-400 hover:text-white transition-colors underline"
+            >
+              {t('clear')}
+            </button>
+          )}
+        </div>
+
+        <BadgeForm
+          onFuelChange={setFuel}
+          onYearChange={setYear}
+          onMonthChange={setMonth}
+          onCalculate={calculateBadge}
+        />
+
+        <BadgeResult 
+          badge={badge} 
+          isFuture={isFuture} 
+          isResident={isResident} 
+          cityId={cityId}
+        />
       </div>
-
-      <BadgeForm
-        onFuelChange={setFuel}
-        onYearChange={setYear}
-        onMonthChange={setMonth}
-        onCalculate={calculateBadge}
-      />
-
-      <BadgeResult 
-        badge={badge} 
-        isFuture={isFuture} 
-        isResident={isResident} 
-        cityId={cityId}
-      />
     </div>
   );
 };

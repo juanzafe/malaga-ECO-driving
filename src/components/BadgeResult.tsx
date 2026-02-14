@@ -7,73 +7,97 @@ interface Props {
   cityId: string;
 }
 
-export const BadgeResult = ({ badge, isFuture, isResident, cityId }: Props) => {
-  useTranslation();
+export const BadgeResult = ({ badge, isFuture, isResident }: Props) => {
+  const { t } = useTranslation();
+
   if (!badge) return null;
 
   const getInfo = () => {
+
     if (isResident) {
-      const isMadridA = cityId === 'madrid' && badge === 'SIN';
-      return { 
-        title: isMadridA ? "Acceso Prohibido" : "Acceso Residente", 
-        desc: isMadridA 
-          ? "En Madrid, desde 2025/26 incluso los residentes sin etiqueta tienen prohibido circular."
-          : `Como residente en ${cityId === 'malaga' ? 'Málaga' : 'Madrid'}, tienes permisos especiales gestionados por tu ayuntamiento.`,
-        color: isMadridA ? "bg-red-50 border-red-200 text-red-800" : "bg-emerald-50 border-emerald-200 text-emerald-800",
-        icon: isMadridA ? "⛔" : "🏠" 
+      return {
+        title: t('resident'),
+        desc: t('residentBadgeDesc'),
+        gradient: "from-emerald-500 to-teal-500",
+        icon: "🏠"
       };
     }
 
-    // Switch de etiquetas
     switch (badge) {
       case 'CERO':
       case 'ECO':
-        return { 
-          title: "Sin restricciones", 
-          desc: "Máxima libertad. Puedes circular y aparcar en todas las zonas ZBE sin restricciones.",
-          color: "bg-green-50 border-green-200 text-green-800",
+        return {
+          title: badge,
+          desc: t('ecoBadgeDesc'),
+          gradient: "from-green-400 to-emerald-500",
           icon: "🍀"
         };
+
       case 'C':
-        return { 
-          title: isFuture ? "Solo Parking (2027)" : "Libre en Zonas, Parking en Centro", 
-          desc: "Puedes moverte por la ZBE, pero para entrar al corazón de la ciudad (Zona 1) es obligatorio aparcar en un parking público.",
-          color: "bg-blue-50 border-blue-200 text-blue-800",
+        return {
+          title: badge,
+          desc: isFuture 
+            ? t('cBadgeFutureDesc')
+            : t('cBadgeTodayDesc'),
+          gradient: "from-blue-500 to-cyan-500",
           icon: "🅿️"
         };
+
       case 'B':
-        return { 
-          title: isFuture ? "Acceso Prohibido (2027)" : "Prohibido en Centro", 
+        return {
+          title: badge,
           desc: isFuture 
-            ? "En 2027, los vehículos etiqueta B no podrán entrar en ninguna de las dos zonas ZBE." 
-            : "Hoy: Puedes circular por el anillo exterior, pero tienes prohibido entrar al Centro Histórico.",
-          color: "bg-red-50 border-red-200 text-red-800",
+            ? t('bBadgeFutureDesc')
+            : t('bBadgeTodayDesc'),
+          gradient: "from-red-500 to-orange-500",
           icon: "🚫"
         };
+
+      case 'SIN':
       default:
-        return { 
-          title: "Acceso Prohibido", 
-          desc: "Los vehículos sin etiqueta tienen prohibido el acceso a ambas zonas ZBE.",
-          color: "bg-slate-100 border-slate-300 text-slate-700",
+        return {
+          title: badge,
+          desc: t('sinBadgeDesc'),
+          gradient: "from-slate-600 to-slate-800",
           icon: "⛔"
         };
     }
   };
 
   const info = getInfo();
-  if (!info) return null;
 
   return (
-    <div className={`mt-6 p-5 rounded-2xl border-2 transition-all duration-500 animate-in fade-in slide-in-from-top-4 ${info.color}`}>
-      <div className="flex items-center gap-3 mb-2">
-        <span className="text-3xl">{info.icon}</span>
-        <div className="text-2xl font-black tracking-tighter uppercase">{badge}</div>
+    <div className="relative mt-8">
+
+      {/* Glow */}
+      <div className={`absolute inset-0 bg-linear-to-r ${info.gradient}
+                      blur-2xl opacity-20 rounded-3xl`} />
+
+      {/* Card */}
+      <div className="relative p-6 rounded-3xl
+                      bg-slate-900/80
+                      border border-white/20
+                      shadow-2xl
+                      backdrop-blur-xl
+                      transition-all duration-500">
+
+        <div className="flex items-center gap-4 mb-4">
+          <div className={`w-14 h-14 rounded-2xl bg-linear-to-br ${info.gradient}
+                          flex items-center justify-center text-2xl shadow-lg`}>
+            {info.icon}
+          </div>
+
+          <div>
+            <div className="text-3xl font-black text-white tracking-tight">
+              {info.title}
+            </div>
+          </div>
+        </div>
+
+        <p className="text-sm text-slate-300 leading-relaxed">
+          {info.desc}
+        </p>
       </div>
-      
-      <h4 className="font-bold text-sm mb-1">{info.title}</h4>
-      <p className="text-xs leading-relaxed opacity-90 font-medium">
-        {info.desc}
-      </p>
     </div>
   );
 };
