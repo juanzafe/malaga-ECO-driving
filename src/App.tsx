@@ -71,6 +71,7 @@ function CityView() {
 
               {searchedLocation && (
                 <NearbyParkings
+                  cityId={cityId!}
                   origin={searchedLocation.coords}
                   onParkingsLoaded={setNearbyParkings}
                   onParkingSelected={(parking) => {
@@ -148,6 +149,7 @@ function CityView() {
               <>
                 <div className="mb-4">
                   <NearbyParkings
+                    cityId={cityId!}
                     origin={searchedLocation.coords}
                     onParkingsLoaded={setNearbyParkings}
                     onParkingSelected={(parking) => {

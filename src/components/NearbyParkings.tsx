@@ -4,6 +4,7 @@ import { getZoneFromCoords } from '../data/ZbeRules';
 
 interface Props {
   origin: [number, number];
+  cityId: string;
   onParkingsLoaded: (parkings: Parking[]) => void;
   onParkingSelected?: (parking: Parking) => void;
 }
@@ -32,7 +33,7 @@ const OVERPASS_SERVERS: string[] = [
   'https://overpass.openstreetmap.ru/api/interpreter',
 ];
 
-export const NearbyParkings = ({ origin, onParkingsLoaded}: Props) => {
+export const NearbyParkings = ({ origin, cityId, onParkingsLoaded}: Props) => {
   useEffect(() => {
     const controller = new AbortController();
     let isMounted = true;
@@ -75,7 +76,7 @@ export const NearbyParkings = ({ origin, onParkingsLoaded}: Props) => {
             })
             .filter((p): p is Parking => {
               if (p === null) return false;
-              const zone = getZoneFromCoords(p.coords);
+              const zone = getZoneFromCoords(p.coords, cityId);
               return zone === 'ZONA1' || zone === 'ZONA2';
             });
 
@@ -111,7 +112,7 @@ export const NearbyParkings = ({ origin, onParkingsLoaded}: Props) => {
       isMounted = false;
       controller.abort();
     };
-  }, [onParkingsLoaded, origin]);
+  }, [onParkingsLoaded, origin, cityId]);
 
   return null;
 };

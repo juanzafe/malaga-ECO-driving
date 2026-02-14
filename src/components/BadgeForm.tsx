@@ -51,7 +51,6 @@ export const BadgeForm = ({ onFuelChange, onYearChange, onMonthChange, onCalcula
         </select>
       </div>
 
-      {/* Year and Month Grid */}
       <div className="grid grid-cols-2 gap-4 items-end">
         <div>
           <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">
@@ -80,8 +79,7 @@ export const BadgeForm = ({ onFuelChange, onYearChange, onMonthChange, onCalcula
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider"
->
+          <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">
             {t('registrationMonth')}
           </label>
           <select 
@@ -109,7 +107,6 @@ export const BadgeForm = ({ onFuelChange, onYearChange, onMonthChange, onCalcula
         </div>
       </div>
 
-      {/* Calculate Button */}
       <button 
   onClick={onCalculate}
   className="w-full bg-linear-to-r from-emerald-500 via-teal-500 to-cyan-500
