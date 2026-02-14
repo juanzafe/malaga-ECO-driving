@@ -4,7 +4,7 @@ const APP_URL = 'http://127.0.0.1:5173';
 
 test.describe('Pruebas del Mapa ZBE Málaga (Leaflet)', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(APP_URL);
+    await page.goto(`${APP_URL}/malaga`);
     await page.waitForSelector('.leaflet-container', { timeout: 10000 });
   });
  test('debería cambiar el color de las zonas según la etiqueta calculada', async ({ page }) => {
