@@ -17,15 +17,16 @@ interface NominatimResult {
   type: string;
 }
 
-// Bounds para cada ciudad
 const CITY_BOUNDS: Record<string, string> = {
   malaga: '-4.5539,36.7845,-4.3005,36.6596',
-  madrid: '-3.8882,40.5868,-3.5179,40.3119'
+  madrid: '-3.8882,40.5868,-3.5179,40.3119',
+  barcelona: '2.0536,41.4695,2.2280,41.3200'
 };
 
 const CITY_NAMES: Record<string, string> = {
   malaga: 'Málaga',
-  madrid: 'Madrid'
+  madrid: 'Madrid',
+  barcelona: 'Barcelona'
 };
 
 export const StreetSearch = ({ onStreetSelected, cityId }: Props) => {
@@ -42,7 +43,6 @@ export const StreetSearch = ({ onStreetSelected, cityId }: Props) => {
   const cityBounds = CITY_BOUNDS[cityId] || CITY_BOUNDS.malaga;
   const cityName = CITY_NAMES[cityId] || 'Málaga';
 
-  // Valor computed: si es ubicación actual, mostrar texto traducido
   const displayQuery = isCurrentLocation ? t('location.currentPosition') : query;
 
   useEffect(() => {
@@ -108,7 +108,7 @@ export const StreetSearch = ({ onStreetSelected, cityId }: Props) => {
         setGpsLoading(false);
         setResults([]);
         setIsCurrentLocation(true);
-        setQuery(''); // Limpiar query, displayQuery mostrará la traducción
+        setQuery('');
 
         onStreetSelected([latitude, longitude], t('location.currentPosition'));
       },

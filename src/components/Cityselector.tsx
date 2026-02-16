@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
+import { LanguageToggle } from './LanguageToggle';
 
 export const CitySelector = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  // Pre-calcular posiciones aleatorias para las partículas (solo una vez)
   const [particles] = useState(() => 
     Array.from({ length: 20 }, () => ({
       left: Math.random() * 100,
@@ -22,8 +22,7 @@ export const CitySelector = () => {
       name: 'Málaga',
       icon: '🌴',
       gradient: 'from-emerald-500 via-teal-500 to-cyan-500',
-      accentColor: 'emerald',
-      image: 'https://images.unsplash.com/photo-1591017403286-fd8493524e1e?w=1200&q=80',
+      image: 'https://images.unsplash.com/photo-1601042879364-f3947d3f9c16?w=800&q=80',
       description: t('citySelector.malagaDesc'),
       stats: t('citySelector.malagaStats')
     },
@@ -32,17 +31,27 @@ export const CitySelector = () => {
       name: 'Madrid',
       icon: '🏛️',
       gradient: 'from-blue-500 via-indigo-500 to-purple-500',
-      accentColor: 'blue',
       image: 'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=800&q=80',
       description: t('citySelector.madridDesc'),
       stats: t('citySelector.madridStats')
+    },
+    {
+      id: 'barcelona',
+      name: 'Barcelona',
+      icon: '🏖️',
+      gradient: 'from-pink-500 via-rose-500 to-red-500',
+      image: 'https://images.unsplash.com/photo-1583422409516-2895a77efded?w=800&q=80',
+      description: t('citySelector.barcelonaDesc'),
+      stats: t('citySelector.barcelonaStats')
     }
   ];
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden">
       
-      {/* Animated Background Pattern */}
+      {/* Language Toggle */}
+      <LanguageToggle variant="dark" />
+      
       <div className="fixed inset-0 opacity-10">
         <div className="absolute inset-0" 
              style={{
@@ -51,7 +60,6 @@ export const CitySelector = () => {
              }} />
       </div>
 
-      {/* Floating particles effect */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {particles.map((particle, i) => (
           <div
@@ -67,7 +75,6 @@ export const CitySelector = () => {
         ))}
       </div>
 
-      {/* Header */}
       <header className="bg-white/5 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="text-center space-y-3">
@@ -81,18 +88,9 @@ export const CitySelector = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-20">
         
-        {/* Hero Section */}
         <div className="text-center mb-20 space-y-6">
-          <div className="inline-block">
-            <div className="bg-linear-to-r from-emerald-500/20 to-blue-500/20 rounded-full px-6 py-2 border border-emerald-500/30 mb-6">
-              <p className="text-emerald-400 font-bold text-sm tracking-wide">
-                ✨ Consulta en tiempo real
-              </p>
-            </div>
-          </div>
           
           <h2 className="text-4xl lg:text-5xl font-black text-white leading-tight">
             {t('citySelector.selectCity')}
@@ -102,8 +100,7 @@ export const CitySelector = () => {
           </p>
         </div>
 
-        {/* City Cards - ESPECTACULARES */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-24">
           {cities.map((city, idx) => (
             <button
               key={city.id}
@@ -114,7 +111,6 @@ export const CitySelector = () => {
                          animate-[fadeInUp_0.8s_ease-out_forwards] opacity-0
                          shadow-2xl hover:shadow-emerald-500/20"
             >
-              {/* Background Image with Overlay */}
               <div className="absolute inset-0">
                 <img 
                   src={city.image} 
@@ -127,10 +123,8 @@ export const CitySelector = () => {
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent" />
               </div>
 
-              {/* Content */}
               <div className="relative z-10 p-10 h-80 flex flex-col justify-between">
                 
-                {/* Top Section */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="text-7xl transform group-hover:scale-125 group-hover:rotate-12 
@@ -149,7 +143,6 @@ export const CitySelector = () => {
                   </div>
                 </div>
 
-                {/* Bottom Section */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className={`inline-flex items-center gap-3 px-6 py-3 rounded-full 
@@ -160,7 +153,6 @@ export const CitySelector = () => {
                       {city.stats}
                     </div>
 
-                    {/* Arrow */}
                     <div className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20
                                   flex items-center justify-center
                                   transform group-hover:bg-white/20 group-hover:translate-x-2 
@@ -172,7 +164,6 @@ export const CitySelector = () => {
                     </div>
                   </div>
 
-                  {/* Progress Bar Effect */}
                   <div className="h-1 bg-white/10 rounded-full overflow-hidden">
                     <div className={`h-full bg-linear-to-r ${city.gradient} 
                                    transform origin-left scale-x-0 group-hover:scale-x-100 
@@ -181,14 +172,12 @@ export const CitySelector = () => {
                 </div>
               </div>
 
-              {/* Glow effect */}
               <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700
                              bg-linear-to-r ${city.gradient} blur-3xl -z-10`} />
             </button>
           ))}
         </div>
 
-        {/* Features Grid - MEJORADO */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
             { 
@@ -235,7 +224,6 @@ export const CitySelector = () => {
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="mt-32 pb-16 text-center">
         <div className="inline-block px-8 py-4 bg-white/5 backdrop-blur-xl rounded-full 
                       border border-white/10">

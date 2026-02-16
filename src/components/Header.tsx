@@ -1,94 +1,97 @@
-import { LanguageToggle } from "./LanguageToggle";
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { LanguageToggle } from './LanguageToggle';
 
 interface HeaderProps {
-    isFuture: boolean;
-    isResident: boolean;
-    setIsFuture: (value: boolean) => void;
-    setIsResident: (value: boolean) => void;
-    cityName: string;
+  isFuture: boolean;
+  isResident: boolean;
+  setIsFuture: (value: boolean) => void;
+  setIsResident: (value: boolean) => void;
+  cityName: string;
 }
 
 export const Header = ({ isFuture, isResident, setIsFuture, setIsResident, cityName }: HeaderProps) => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
-    <>
-      <LanguageToggle />
-    
-      {/* Main Header - Dark theme */}
-      <nav className="sticky top-0 z-50 bg-linear-to-r from-slate-900 via-slate-800 to-slate-900 shadow-2xl border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 py-5">
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
-              <button 
-                onClick={() => navigate('/')}
-                className="group flex items-center gap-3 hover:opacity-80 transition-opacity"
-              >
-                <div className="text-3xl transform group-hover:scale-110 transition-transform">
-                  🌿
-                </div>
-                <div>
-                  <h1 className="text-2xl font-black text-transparent bg-clip-text bg-linear-to-r from-emerald-400 to-teal-400 tracking-tight">
-                    ZBE {cityName}
-                  </h1>
-                  <p className="text-xs text-slate-400 font-medium tracking-wide">
-                    {t('appTagline')}
-                  </p>
-                </div>
-              </button>
+    <header className="bg-linear-to-r from-slate-900 via-slate-800 to-slate-900 border-b border-white/10 sticky top-0 z-1000 backdrop-blur-xl">
+      <LanguageToggle variant="dark" />
+      
+      <div className="max-w-7xl mx-auto px-14 py-4">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          
+          {/* Logo y título */}
+          <div 
+            onClick={() => navigate('/')}
+            className="flex items-center gap-3 cursor-pointer group"
+          >
+            <div className="text-4xl transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+              🚗
+            </div>
+            <div>
+              <h1 className="text-2xl lg:text-3xl font-black bg-clip-text text-transparent bg-linear-to-r from-emerald-400 to-teal-400 group-hover:from-emerald-300 group-hover:to-teal-300 transition-all">
+                {cityName}
+              </h1>
+              <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
+                {t('subtitle')}
+              </p>
             </div>
           </div>
-        </div>
-      </nav>
-    
-      {/* Controls Bar - Glass morphism */}
-      <div className="sticky top-22 z-40 bg-slate-800/80 backdrop-blur-xl border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex justify-between items-center gap-4">
-            
-            {/* Resident Toggle */}
-            <button
-              onClick={() => setIsResident(!isResident)}
-              className={`group px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300
-                        flex items-center gap-2 shadow-lg
-                        ${isResident 
-                          ? 'bg-linear-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-500/30 scale-105' 
-                          : 'bg-white/10 text-slate-300 hover:bg-white/20'
-                        }`}
-            >
-              <span className="text-lg">{isResident ? '🏠' : '👤'}</span>
-              <span>{isResident ? t('resident') : t('nonResident')}</span>
-            </button>
 
-            {/* Year Toggle */}
-            <div className="flex bg-white/10 backdrop-blur-md rounded-full p-1 border border-white/20 shadow-lg">
-              <button 
-                onClick={() => setIsFuture(false)} 
-                className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300
-                          ${!isFuture 
-                            ? 'bg-linear-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/30' 
-                            : 'text-slate-300 hover:text-white'
-                          }`}
+          {/* Controles */}
+          <div className="flex flex-wrap items-center gap-3">
+            
+            {/* Toggle Residente */}
+            <div className="flex items-center gap-2 bg-white/5 backdrop-blur-xl rounded-full px-3 py-1.5 border border-white/10">
+              <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                {isResident ? '🏠' : '🚗'}
+              </span>
+              <button
+                onClick={() => setIsResident(!isResident)}
+                className={`relative w-14 h-7 rounded-full transition-all duration-300 ${
+                  isResident 
+                    ? 'bg-linear-to-r from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/30' 
+                    : 'bg-white/10'
+                }`}
               >
-                2026
+                <div
+                  className={`absolute top-0.5 w-6 h-6 bg-white rounded-full shadow-lg transition-transform duration-300 ${
+                    isResident ? 'translate-x-7' : 'translate-x-0.5'
+                  }`}
+                />
               </button>
-              <button 
-                onClick={() => setIsFuture(true)} 
-                className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300
-                          ${isFuture 
-                            ? 'bg-linear-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/30' 
-                            : 'text-slate-300 hover:text-white'
-                          }`}
+              <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                {t(isResident ? 'resident' : 'nonResident')}
+              </span>
+            </div>
+
+            {/* Toggle Año */}
+            <div className="flex gap-1 bg-white/5 backdrop-blur-xl rounded-full p-1 border border-white/10">
+              <button
+                onClick={() => setIsFuture(false)}
+                className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider transition-all duration-300 ${
+                  !isFuture
+                    ? 'bg-linear-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/30'
+                    : 'text-slate-400 hover:text-white hover:bg-white/10'
+                }`}
               >
-                2027
+                {t('year2026')}
+              </button>
+              <button
+                onClick={() => setIsFuture(true)}
+                className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider transition-all duration-300 ${
+                  isFuture
+                    ? 'bg-linear-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/30'
+                    : 'text-slate-400 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                {t('year2027')}
               </button>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </header>
   );
 };

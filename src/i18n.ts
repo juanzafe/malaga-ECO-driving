@@ -12,6 +12,7 @@ i18n.use(initReactI18next).init({
         year2026: '2026',
         year2027: '2027',
         configure: 'Configurar vehículo',
+        
         citySelector: {
           title: 'Calculadora ZBE',
           selectCity: 'Selecciona tu ciudad',
@@ -19,6 +20,8 @@ i18n.use(initReactI18next).init({
           malagaStats: '2 zonas ZBE activas',
           madridDesc: 'Capital de España',
           madridStats: 'Madrid Central + ZBE',
+          barcelonaDesc: 'Ciudad Condal',
+          barcelonaStats: 'ZBE Rondas + Zona Especial',
           vehicleTitle: 'Tu vehículo',
           vehicleDesc: 'Calcula la etiqueta ambiental según año y combustible',
           searchTitle: 'Busca calles',
@@ -63,6 +66,7 @@ i18n.use(initReactI18next).init({
         parkingCenterOnly: 'Parking obligatorio en el Centro',
         forbiddenCenterB: 'Prohibido acceder al Centro',
         forbiddenEverywhere: 'Acceso prohibido a la ZBE',
+        
         mapTooltip: {
           zone1: 'ZONA 1 - CENTRO',
           zone2: 'ZONA 2',
@@ -79,8 +83,8 @@ i18n.use(initReactI18next).init({
         parkingCenter: 'Acceso libre al Anillo, pero parking obligatorio en el Centro.',
         freeOuterRing: 'Acceso libre al Anillo Exterior.',
 
-        residentBadgeDesc: "✅ Al estar empadronado en Málaga, tienes permiso para circular por toda la ZBE sin restricciones.",
-        ecoBadgeDesc: "Puedes circular y aparcar en cualquier zona de Málaga sin restricciones.",
+        residentBadgeDesc: "✅ Al estar empadronado, tienes permiso para circular por toda la ZBE sin restricciones.",
+        ecoBadgeDesc: "Puedes circular y aparcar en cualquier zona sin restricciones.",
         cBadgeTodayDesc: "✅ HOY: Acceso libre al Anillo, pero en el Centro es obligatorio aparcar en parking público.",
         cBadgeFutureDesc: "🅿️ EN 2027: Solo podrás entrar a la ZBE si vas directamente a un parking público.",
         bBadgeTodayDesc: "🚫 ACCESO RESTRINGIDO: Si no eres residente, ya no puedes circular por la ZBE con etiqueta B.",
@@ -104,11 +108,11 @@ i18n.use(initReactI18next).init({
         directions: "Cómo llegar",
         fillAllFields: "Por favor, completa todos los campos",
         appTagline: "Comprueba si tu vehículo puede acceder a una zona ZBE",
-        configuration: 'Configurar vehículo y busqueda',
+        configuration: 'Configurar vehículo y búsqueda',
         freeArea: 'Área libre de restricciones',
         privacy: {
           title: 'Mensaje de privacidad',
-          description: 'Usamos cookies para recordar tus preferencias y mejorar tu experiencia en Málaga Eco.',
+          description: 'Usamos cookies para recordar tus preferencias y mejorar tu experiencia.',
           accept: 'Aceptar y continuar',
           reject: 'Rechazar',
           learnMore: 'Ver política de privacidad',
@@ -133,6 +137,8 @@ i18n.use(initReactI18next).init({
           malagaStats: '2 active LEZ zones',
           madridDesc: 'Capital of Spain',
           madridStats: 'Madrid Central + LEZ',
+          barcelonaDesc: 'Catalan Capital',
+          barcelonaStats: 'Rondas LEZ + Special Zone',
           vehicleTitle: 'Your vehicle',
           vehicleDesc: 'Calculate environmental badge based on year and fuel',
           searchTitle: 'Search streets',
@@ -160,7 +166,7 @@ i18n.use(initReactI18next).init({
         outerRing: 'Outer Ring',
         outsideZbe: 'Outside LEZ',
         checkAddress: 'Check an address',
-        searchPlaceholder: 'Enter a street in Malaga',
+        searchPlaceholder: 'Enter a street',
         streetPlaceholder: "e.g., Larios, Constitucion...",
         streetAllowed: "✅ Access allowed according to current regulations",
         streetForbidden: "⛔ Access forbidden according to current regulations",
@@ -178,6 +184,7 @@ i18n.use(initReactI18next).init({
         parkingCenterOnly: 'Mandatory parking in Center',
         forbiddenCenterB: 'Forbidden in Center',
         forbiddenEverywhere: 'Access forbidden to LEZ',
+
         mapTooltip: {
           zone1: 'ZONE 1 - CENTER',
           zone2: 'ZONE 2',
@@ -194,8 +201,8 @@ i18n.use(initReactI18next).init({
         parkingCenter: 'Free access to the Ring, but mandatory parking in the Center.',
         freeOuterRing: 'Free access to the Outer Ring.',
 
-        residentBadgeDesc: "✅ As a registered resident in Malaga, you have permission to drive through the entire LEZ without restrictions.",
-        ecoBadgeDesc: "You can drive and park in any area of Malaga without restrictions.",
+        residentBadgeDesc: "✅ As a registered resident, you have permission to drive through the entire LEZ without restrictions.",
+        ecoBadgeDesc: "You can drive and park in any area without restrictions.",
         cBadgeTodayDesc: "✅ TODAY: Free access to the Outer Ring, but in the Historic Center, public parking is mandatory.",
         cBadgeFutureDesc: "🅿️ IN 2027: You can only enter the LEZ if you go directly to a public car park.",
         bBadgeTodayDesc: "🚫 RESTRICTED ACCESS: If you are not a resident, you can no longer drive in the LEZ with a B label.",
@@ -223,7 +230,7 @@ i18n.use(initReactI18next).init({
         freeArea: 'Free access area',
         privacy: {
           title: 'Privacy notice',
-          description: 'We use cookies to remember your preferences and improve your experience in Malaga Eco.',
+          description: 'We use cookies to remember your preferences and improve your experience.',
           accept: 'Accept and continue',
           reject: 'Reject',
           learnMore: 'View privacy policy',
