@@ -78,7 +78,7 @@ export const CitySelector = () => {
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="text-center space-y-3">
             <h1 className="text-5xl lg:text-6xl font-black tracking-tight bg-clip-text text-transparent bg-linear-to-r from-emerald-400 via-teal-400 to-blue-400">
-              🚗 {t('citySelector.title')}
+              {t('citySelector.title')}
             </h1>
             <p className="text-sm text-slate-300 font-semibold tracking-widest uppercase">
               {t('subtitle')}

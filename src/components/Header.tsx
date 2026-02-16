@@ -25,7 +25,7 @@ export const Header = ({ isFuture, isResident, setIsFuture, setIsResident, cityN
             className="flex items-center gap-3 cursor-pointer group"
           >
             <div className="text-4xl transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-              🚗
+              💨
             </div>
             <div>
               <h1 className="text-2xl lg:text-3xl font-black bg-clip-text text-transparent bg-linear-to-r from-emerald-400 to-teal-400 group-hover:from-emerald-300 group-hover:to-teal-300 transition-all">
