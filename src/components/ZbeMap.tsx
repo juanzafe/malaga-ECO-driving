@@ -5,8 +5,6 @@ import L from 'leaflet';
 import { type Badge, checkAccess } from '../data/ZbeRules';
 import type { Parking } from '../types/Parking';
 import { useTranslation } from 'react-i18next';
-
-// --- ICONOS ---
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
@@ -24,7 +22,6 @@ const ParkingIcon = L.divIcon({
   iconSize: [24, 24],
 });
 
-// --- TIPOS ---
 type ZoneType = 'ZONA1' | 'ZONA2';
 
 interface OverpassElement {
@@ -120,8 +117,6 @@ export const ZbeMap = ({
   const parkingsToShow = externalParkings || localParkings;
   const ruleZona1 = checkAccess(userLabel, isFuture, 'ZONA1', isResident, cityId);
   const ruleZona2 = checkAccess(userLabel, isFuture, 'ZONA2', isResident, cityId);
-
-  // Helper para obtener el texto traducido del mensaje
   const getTooltipMessage = (messageKey: string): string => {
     switch (messageKey) {
       case 'selectBadge': return t('mapTooltip.selectVehicle');
@@ -152,7 +147,6 @@ export const ZbeMap = ({
         
         <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" attribution="© OSM" />
 
-        {/* ZONA 2 - EXTERIOR */}
         {polygons.zona2.length > 0 && (
           <Polygon 
             positions={polygons.zona2} 
@@ -178,7 +172,6 @@ export const ZbeMap = ({
           </Polygon>
         )}
 
-        {/* ZONA 1 - CENTRO */}
         {polygons.zona1.length > 0 && (
           <Polygon 
             positions={polygons.zona1} 
@@ -203,7 +196,6 @@ export const ZbeMap = ({
           </Polygon>
         )}
 
-        {/* Marcador de búsqueda */}
         {externalSearch && (
           <Marker position={externalSearch.coords} zIndexOffset={1100}>
             <Tooltip permanent direction="top" offset={[0, -20]}>
@@ -212,7 +204,6 @@ export const ZbeMap = ({
           </Marker>
         )}
 
-        {/* Parkings */}
         {parkingsToShow.map(p => (
           <Marker key={p.id} position={p.coords} icon={ParkingIcon} zIndexOffset={1000}>
             <Popup closeButton={false}>

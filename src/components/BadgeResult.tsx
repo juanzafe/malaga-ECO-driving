@@ -69,11 +69,9 @@ export const BadgeResult = ({ badge, isFuture, isResident }: Props) => {
   return (
     <div className="relative mt-8">
 
-      {/* Glow */}
       <div className={`absolute inset-0 bg-linear-to-r ${info.gradient}
                       blur-2xl opacity-20 rounded-3xl`} />
 
-      {/* Card */}
       <div className="relative p-6 rounded-3xl
                       bg-slate-900/80
                       border border-white/20

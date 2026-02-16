@@ -48,8 +48,7 @@ export const CitySelector = () => {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden">
-      
-      {/* Language Toggle */}
+
       <LanguageToggle variant="dark" />
       
       <div className="fixed inset-0 opacity-10">

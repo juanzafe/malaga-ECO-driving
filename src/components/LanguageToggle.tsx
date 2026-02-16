@@ -13,7 +13,6 @@ export const LanguageToggle = ({ variant = 'light' }: Props) => {
     localStorage.setItem('lang', newLang);
   };
 
-  // Estilos según variante
   const isDark = variant === 'dark';
   
   const buttonClasses = isDark

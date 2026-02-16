@@ -50,7 +50,6 @@ export const VehicleChecker = ({
   return (
     <div className="relative max-w-lg mx-auto">
 
-      {/* Glow background */}
       <div className="absolute inset-0 bg-linear-to-r from-emerald-500/20 to-blue-500/20 blur-3xl opacity-40 rounded-3xl -z-10" />
 
       <div className="p-8 bg-white/5 backdrop-blur-xl rounded-3xl 

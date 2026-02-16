@@ -23,7 +23,6 @@ export const BadgeForm = ({ onFuelChange, onYearChange, onMonthChange, onCalcula
 
   return (
     <div className="space-y-5">
-      {/* Fuel Type */}
       <div>
         <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">
           {t('fuelType')}

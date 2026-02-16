@@ -20,8 +20,6 @@ export const Header = ({ isFuture, isResident, setIsFuture, setIsResident, cityN
       
       <div className="max-w-7xl mx-auto px-14 py-4">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          
-          {/* Logo y título */}
           <div 
             onClick={() => navigate('/')}
             className="flex items-center gap-3 cursor-pointer group"
@@ -39,10 +37,8 @@ export const Header = ({ isFuture, isResident, setIsFuture, setIsResident, cityN
             </div>
           </div>
 
-          {/* Controles */}
           <div className="flex flex-wrap items-center gap-3">
-            
-            {/* Toggle Residente */}
+
             <div className="flex items-center gap-2 bg-white/5 backdrop-blur-xl rounded-full px-3 py-1.5 border border-white/10">
               <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">
                 {isResident ? '🏠' : '🚗'}
@@ -66,7 +62,6 @@ export const Header = ({ isFuture, isResident, setIsFuture, setIsResident, cityN
               </span>
             </div>
 
-            {/* Toggle Año */}
             <div className="flex gap-1 bg-white/5 backdrop-blur-xl rounded-full p-1 border border-white/10">
               <button
                 onClick={() => setIsFuture(false)}
