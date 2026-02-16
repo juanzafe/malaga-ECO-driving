@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import L from 'leaflet';
 import { type Badge, checkAccess } from '../data/ZbeRules';
 import type { Parking } from '../types/Parking';
+import { useTranslation } from 'react-i18next';
 
 // --- ICONOS ---
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -38,7 +39,6 @@ interface OverpassResponse {
   elements: OverpassElement[];
 }
 
-// Sub-componente para mover la cámara cuando cambias de ciudad
 function ChangeView({ center, zoom }: { center: LatLngTuple, zoom: number }) {
   const map = useMap();
   useEffect(() => {
@@ -49,7 +49,6 @@ function ChangeView({ center, zoom }: { center: LatLngTuple, zoom: number }) {
 
 const OVERPASS_SERVERS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter'];
 
-// --- COMPONENTE NEARBY PARKINGS ---
 export const NearbyParkings = ({ 
   origin, 
   onParkingsLoaded 
@@ -93,7 +92,6 @@ export const NearbyParkings = ({
   return null;
 };
 
-// --- COMPONENTE ZBEMAP ---
 export const ZbeMap = ({ 
   isFuture, 
   userLabel, 
@@ -115,12 +113,27 @@ export const ZbeMap = ({
   cityZoom: number;
   polygons: { zona1: LatLngTuple[], zona2: LatLngTuple[] }
 }) => {
+  const { t } = useTranslation();
   const [hovered, setHovered] = useState<ZoneType | null>(null);
   const [localParkings, setLocalParkings] = useState<Parking[]>([]);
 
   const parkingsToShow = externalParkings || localParkings;
   const ruleZona1 = checkAccess(userLabel, isFuture, 'ZONA1', isResident, cityId);
   const ruleZona2 = checkAccess(userLabel, isFuture, 'ZONA2', isResident, cityId);
+
+  // Helper para obtener el texto traducido del mensaje
+  const getTooltipMessage = (messageKey: string): string => {
+    switch (messageKey) {
+      case 'selectBadge': return t('mapTooltip.selectVehicle');
+      case 'freeAccess': return t('mapTooltip.accessAllowed');
+      case 'parkingCenterOnly':
+      case 'parkingRequiredAll': return t('mapTooltip.parkingRequired');
+      case 'forbiddenCenterB':
+      case 'forbiddenEverywhere': return t('mapTooltip.accessForbidden');
+      case 'outsideZbe': return t('mapTooltip.outsideZone');
+      default: return t('mapTooltip.seeRestrictions');
+    }
+  };
 
   const openGoogleMaps = (dest: [number, number]) => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${dest[0]},${dest[1]}&travelmode=driving`;
@@ -151,7 +164,18 @@ export const ZbeMap = ({
               fillOpacity: hovered === 'ZONA2' ? 0.4 : 0.2, 
               dashArray: '5, 10' 
             }}
-          />
+          >
+            <Tooltip sticky>
+              <div className="text-center">
+                <p className="font-black text-xs mb-1" style={{ color: ruleZona2.color }}>
+                  {ruleZona2.icon} {t('mapTooltip.zone2')}
+                </p>
+                <p className="text-[10px] font-semibold">
+                  {getTooltipMessage(ruleZona2.messageKey)}
+                </p>
+              </div>
+            </Tooltip>
+          </Polygon>
         )}
 
         {/* ZONA 1 - CENTRO */}
@@ -165,7 +189,18 @@ export const ZbeMap = ({
               weight: hovered === 'ZONA1' ? 4 : 2, 
               fillOpacity: hovered === 'ZONA1' ? 0.7 : 0.5,
             }}
-          />
+          >
+            <Tooltip sticky>
+              <div className="text-center">
+                <p className="font-black text-xs mb-1" style={{ color: ruleZona1.color }}>
+                  {ruleZona1.icon} {t('mapTooltip.zone1')}
+                </p>
+                <p className="text-[10px] font-semibold">
+                  {getTooltipMessage(ruleZona1.messageKey)}
+                </p>
+              </div>
+            </Tooltip>
+          </Polygon>
         )}
 
         {/* Marcador de búsqueda */}
@@ -187,7 +222,7 @@ export const ZbeMap = ({
                   onClick={() => openGoogleMaps(p.coords)}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-[10px] font-black w-full shadow-md flex items-center justify-center gap-1"
                 >
-                  <span>🚗 CÓMO LLEGAR</span>
+                  <span>🚗 {t('directions')}</span>
                 </button>
               </div>
             </Popup>

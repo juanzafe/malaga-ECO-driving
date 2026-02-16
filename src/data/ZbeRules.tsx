@@ -90,10 +90,8 @@ export const getZoneFromCoords = (coords: [number, number], cityId: string): 'ZO
   }
 
   if (cityId === 'madrid') {
-    // Aproximación de Distrito Centro (Madrid Central)
     const isInsideZ1 = lat > 40.405 && lat < 40.430 && lng > -3.715 && lng < -3.690;
     if (isInsideZ1) return 'ZONA1';
-    // El resto de Madrid dentro de la M-30
     const isInsideZ2 = lat > 40.380 && lat < 40.470 && lng > -3.750 && lng < -3.650;
     if (isInsideZ2) return 'ZONA2';
   }

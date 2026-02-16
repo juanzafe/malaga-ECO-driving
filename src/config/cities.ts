@@ -13,13 +13,11 @@ const MALAGA_ZONA_2: LatLngTuple[] = [
   [36.7280, -4.4270], [36.7230, -4.4285], [36.7200, -4.4280],
 ];
 
-// MADRID - Zona 1: Madrid Central (Distrito Centro)
 const MADRID_ZONA_1: LatLngTuple[] = [
   [40.4285, -3.7115], [40.4295, -3.7050], [40.4260, -3.6900],
   [40.4080, -3.6920], [40.4050, -3.7050], [40.4080, -3.7150]
 ];
 
-// MADRID - Zona 2: Aproximación de M-30 (anillo exterior)
 const MADRID_ZONA_2: LatLngTuple[] = [
   // Norte
   [40.4700, -3.7000], [40.4700, -3.6800], [40.4700, -3.6600],

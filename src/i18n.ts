@@ -12,8 +12,6 @@ i18n.use(initReactI18next).init({
         year2026: '2026',
         year2027: '2027',
         configure: 'Configurar vehículo',
-        
-        // Nuevas traducciones para CitySelector
         citySelector: {
           title: 'Calculadora ZBE',
           selectCity: 'Selecciona tu ciudad',
@@ -65,6 +63,16 @@ i18n.use(initReactI18next).init({
         parkingCenterOnly: 'Parking obligatorio en el Centro',
         forbiddenCenterB: 'Prohibido acceder al Centro',
         forbiddenEverywhere: 'Acceso prohibido a la ZBE',
+        mapTooltip: {
+          zone1: 'ZONA 1 - CENTRO',
+          zone2: 'ZONA 2',
+          selectVehicle: 'Selecciona tu vehículo',
+          accessAllowed: '✅ Acceso permitido',
+          parkingRequired: '🅿️ Parking obligatorio',
+          accessForbidden: '⛔ Acceso prohibido',
+          outsideZone: '🌍 Fuera de ZBE',
+          seeRestrictions: 'Ver restricciones'
+        },
         
         residentAccess: 'Acceso permitido por ser residente empadronado.',
         noResidentForbidden: 'Acceso prohibido para no residentes con esta etiqueta.',
@@ -93,9 +101,10 @@ i18n.use(initReactI18next).init({
         vehicleData: 'Datos del vehículo',
         badgeFinder: "Buscador de distintivo",
         clear: "Limpiar",
+        directions: "Cómo llegar",
         fillAllFields: "Por favor, completa todos los campos",
         appTagline: "Comprueba si tu vehículo puede acceder a una zona ZBE",
-
+        configuration: 'Configurar vehículo y busqueda',
         freeArea: 'Área libre de restricciones',
         privacy: {
           title: 'Mensaje de privacidad',
@@ -117,7 +126,6 @@ i18n.use(initReactI18next).init({
         year2027: '2027',
         configure: 'Configure vehicle',
         
-        // New translations for CitySelector
         citySelector: {
           title: 'LEZ Calculator',
           selectCity: 'Select your city',
@@ -170,6 +178,16 @@ i18n.use(initReactI18next).init({
         parkingCenterOnly: 'Mandatory parking in Center',
         forbiddenCenterB: 'Forbidden in Center',
         forbiddenEverywhere: 'Access forbidden to LEZ',
+        mapTooltip: {
+          zone1: 'ZONE 1 - CENTER',
+          zone2: 'ZONE 2',
+          selectVehicle: 'Select your vehicle',
+          accessAllowed: '✅ Access allowed',
+          parkingRequired: '🅿️ Parking required',
+          accessForbidden: '⛔ Access forbidden',
+          outsideZone: '🌍 Outside LEZ',
+          seeRestrictions: 'See restrictions'
+        },
 
         residentAccess: 'Access allowed as a registered resident.',
         noResidentForbidden: 'Access forbidden for non-residents with this badge.',
@@ -198,9 +216,10 @@ i18n.use(initReactI18next).init({
         vehicleData: 'Vehicle data',
         badgeFinder: "Badge finder",
         clear: "Clear",
+        directions: "Get Directions",
         fillAllFields: "Please fill in all fields",
         appTagline: "Check if your vehicle can access a low-emission zone",
-
+        configuration: "Vehicle & Search Settings",
         freeArea: 'Free access area',
         privacy: {
           title: 'Privacy notice',
