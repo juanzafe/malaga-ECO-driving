@@ -70,7 +70,7 @@ export const NearbyParkings = ({ origin, cityId, onParkingsLoaded}: Props) => {
               if (!lat || !lon) return null;
               return {
                 id: String(el.id),
-                name: el.tags?.name || 'Parking público',
+                name: el.tags?.name || '__publicParking__',
                 coords: [lat, lon] as [number, number],
               };
             })

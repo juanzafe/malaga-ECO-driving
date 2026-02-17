@@ -5,6 +5,8 @@ import L from 'leaflet';
 import { type Badge, checkAccess } from '../data/ZbeRules';
 import type { Parking } from '../types/Parking';
 import { useTranslation } from 'react-i18next';
+
+// --- ICONOS ---
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
@@ -22,6 +24,7 @@ const ParkingIcon = L.divIcon({
   iconSize: [24, 24],
 });
 
+// --- TIPOS ---
 type ZoneType = 'ZONA1' | 'ZONA2';
 
 interface OverpassElement {
@@ -117,6 +120,8 @@ export const ZbeMap = ({
   const parkingsToShow = externalParkings || localParkings;
   const ruleZona1 = checkAccess(userLabel, isFuture, 'ZONA1', isResident, cityId);
   const ruleZona2 = checkAccess(userLabel, isFuture, 'ZONA2', isResident, cityId);
+
+  // Helper para obtener el texto traducido del mensaje
   const getTooltipMessage = (messageKey: string): string => {
     switch (messageKey) {
       case 'selectBadge': return t('mapTooltip.selectVehicle');
@@ -147,6 +152,7 @@ export const ZbeMap = ({
         
         <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" attribution="© OSM" />
 
+        {/* ZONA 2 - EXTERIOR */}
         {polygons.zona2.length > 0 && (
           <Polygon 
             positions={polygons.zona2} 
@@ -172,6 +178,7 @@ export const ZbeMap = ({
           </Polygon>
         )}
 
+        {/* ZONA 1 - CENTRO */}
         {polygons.zona1.length > 0 && (
           <Polygon 
             positions={polygons.zona1} 
@@ -196,6 +203,7 @@ export const ZbeMap = ({
           </Polygon>
         )}
 
+        {/* Marcador de búsqueda */}
         {externalSearch && (
           <Marker position={externalSearch.coords} zIndexOffset={1100}>
             <Tooltip permanent direction="top" offset={[0, -20]}>
@@ -204,11 +212,14 @@ export const ZbeMap = ({
           </Marker>
         )}
 
+        {/* Parkings */}
         {parkingsToShow.map(p => (
           <Marker key={p.id} position={p.coords} icon={ParkingIcon} zIndexOffset={1000}>
             <Popup closeButton={false}>
               <div className="p-1 flex flex-col items-center gap-2 min-w-35">
-                <p className="font-bold text-slate-800 m-0 text-center text-sm leading-tight">{p.name}</p>
+                <p className="font-bold text-slate-800 m-0 text-center text-sm leading-tight">
+                  {p.name === '__publicParking__' ? t('parking.publicParking') : p.name}
+                </p>
                 <button
                   onClick={() => openGoogleMaps(p.coords)}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-[10px] font-black w-full shadow-md flex items-center justify-center gap-1"

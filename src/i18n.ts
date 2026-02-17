@@ -119,6 +119,13 @@ i18n.use(initReactI18next).init({
         appTagline: "Comprueba si tu vehículo puede acceder a una zona ZBE",
         configuration: 'Configurar vehículo y búsqueda',
         freeArea: 'Área libre de restricciones',
+        parkingHint: {
+          title: '¿Necesitas aparcar cerca?',
+          desc: 'Introduce una dirección en el buscador y te mostraremos los parkings públicos más cercanos a tu destino.',
+        },
+        parking: {
+          publicParking: 'Parking público',
+        },
         privacy: {
           title: 'Mensaje de privacidad',
           description: 'Usamos cookies para recordar tus preferencias y mejorar tu experiencia.',
@@ -127,10 +134,6 @@ i18n.use(initReactI18next).init({
           learnMore: 'Ver política de privacidad',
           note: 'No cargaremos el contenido hasta que aceptes las cookies.',
         },
-        parkingHint: {
-          title: '¿Necesitas aparcar cerca?',
-          desc: 'Introduce una dirección en el buscador y te mostraremos los parkings públicos más cercanos a tu destino.',
-},
       },
     },
     en: {
@@ -145,7 +148,7 @@ i18n.use(initReactI18next).init({
         
         citySelector: {
           title: 'LEZ Calculator',
-          selectCity: 'Go back',
+          selectCity: 'Go Back',
           malagaDesc: 'Costa del Sol',
           malagaStats: '2 active LEZ zones',
           madridDesc: 'Capital of Spain',
@@ -250,6 +253,13 @@ i18n.use(initReactI18next).init({
         appTagline: "Check if your vehicle can access a low-emission zone",
         configuration: "Vehicle & Search Settings",
         freeArea: 'Free access area',
+        parkingHint: {
+          title: 'Need to park nearby?',
+          desc: 'Enter an address in the search bar and we\'ll show you the nearest public car parks to your destination.',
+        },
+        parking: {
+          publicParking: 'Public parking',
+        },
         privacy: {
           title: 'Privacy notice',
           description: 'We use cookies to remember your preferences and improve your experience.',
@@ -258,10 +268,6 @@ i18n.use(initReactI18next).init({
           learnMore: 'View privacy policy',
           note: 'We will not load the content until you accept the cookies.',
         },
-        parkingHint: {
-          title: 'Need to park nearby?',
-          desc: 'Enter an address in the search bar and we\'ll show you the nearest public car parks to your destination.',
-},
       },
     },
   },

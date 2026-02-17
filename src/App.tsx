@@ -140,19 +140,18 @@ function CityView() {
         </div>
       </main>
 
-  
-      <div className="fixed bottom-6 left-6 z-9998">
+      <div className="fixed bottom-20 left-4 z-9998 lg:bottom-6 lg:left-6">
         <button
           onClick={() => navigate('/')}
           className="flex items-center gap-2 bg-slate-800/90 backdrop-blur-xl border border-white/10
                      hover:bg-slate-700/90 hover:border-white/20 hover:scale-105
-                     text-white px-4 py-3 rounded-full shadow-2xl
+                     text-white px-3 py-2 lg:px-4 lg:py-3 rounded-full shadow-2xl
                      transition-all duration-300 group"
         >
-          <svg className="w-4 h-4 text-emerald-400 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-3 h-3 lg:w-4 lg:h-4 text-emerald-400 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
-          <span className="text-xs font-black uppercase tracking-widest text-slate-300 group-hover:text-white transition-colors">
+          <span className="text-[10px] lg:text-xs font-black uppercase tracking-widest text-slate-300 group-hover:text-white transition-colors">
             {t('citySelector.selectCity')}
           </span>
         </button>
