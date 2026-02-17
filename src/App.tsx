@@ -140,7 +140,7 @@ function CityView() {
         </div>
       </main>
 
-      {/* Botón flotante: volver al inicio */}
+  
       <div className="fixed bottom-6 left-6 z-9998">
         <button
           onClick={() => navigate('/')}

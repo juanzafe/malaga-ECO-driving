@@ -91,12 +91,10 @@ export const CitySelector = () => {
         
         <div className="text-center mb-20 space-y-6">
           
-          <h2 className="text-4xl lg:text-5xl font-black text-white leading-tight">
-            {t('citySelector.selectCity')}
-          </h2>
-          <p className="text-slate-300 max-w-2xl mx-auto text-xl leading-relaxed">
+          <h2 className="text-4xl lg:text-3xl font-black text-white leading-tight">
             {t('heroDescription')}
-          </p>
+          </h2>
+
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-24">
