@@ -15,7 +15,7 @@ i18n.use(initReactI18next).init({
         
         citySelector: {
           title: 'Calculadora ZBE',
-          selectCity: 'Selecciona tu ciudad',
+          selectCity: 'Volver',
           malagaDesc: 'Costa del Sol',
           malagaStats: '2 zonas ZBE activas',
           madridDesc: 'Capital de España',
@@ -66,6 +66,15 @@ i18n.use(initReactI18next).init({
         parkingCenterOnly: 'Parking obligatorio en el Centro',
         forbiddenCenterB: 'Prohibido acceder al Centro',
         forbiddenEverywhere: 'Acceso prohibido a la ZBE',
+
+        badgeResult: {
+          accessByZone: 'Acceso por zona',
+          zone1: 'Zona 1 · Centro',
+          zone2: 'Zona 2 · Exterior',
+          statusAllowed: 'Acceso libre',
+          statusParking: 'Solo con parking',
+          statusForbidden: 'Prohibido',
+        },
         
         mapTooltip: {
           zone1: 'ZONA 1 - CENTRO',
@@ -118,6 +127,10 @@ i18n.use(initReactI18next).init({
           learnMore: 'Ver política de privacidad',
           note: 'No cargaremos el contenido hasta que aceptes las cookies.',
         },
+        parkingHint: {
+          title: '¿Necesitas aparcar cerca?',
+          desc: 'Introduce una dirección en el buscador y te mostraremos los parkings públicos más cercanos a tu destino.',
+},
       },
     },
     en: {
@@ -132,7 +145,7 @@ i18n.use(initReactI18next).init({
         
         citySelector: {
           title: 'LEZ Calculator',
-          selectCity: 'Select your city',
+          selectCity: 'Go back',
           malagaDesc: 'Costa del Sol',
           malagaStats: '2 active LEZ zones',
           madridDesc: 'Capital of Spain',
@@ -185,6 +198,15 @@ i18n.use(initReactI18next).init({
         forbiddenCenterB: 'Forbidden in Center',
         forbiddenEverywhere: 'Access forbidden to LEZ',
 
+        badgeResult: {
+          accessByZone: 'Access by zone',
+          zone1: 'Zone 1 · Center',
+          zone2: 'Zone 2 · Outer ring',
+          statusAllowed: 'Free access',
+          statusParking: 'Parking only',
+          statusForbidden: 'Forbidden',
+        },
+
         mapTooltip: {
           zone1: 'ZONE 1 - CENTER',
           zone2: 'ZONE 2',
@@ -236,6 +258,10 @@ i18n.use(initReactI18next).init({
           learnMore: 'View privacy policy',
           note: 'We will not load the content until you accept the cookies.',
         },
+        parkingHint: {
+          title: 'Need to park nearby?',
+          desc: 'Enter an address in the search bar and we\'ll show you the nearest public car parks to your destination.',
+},
       },
     },
   },

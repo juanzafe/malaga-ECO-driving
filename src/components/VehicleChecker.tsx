@@ -4,8 +4,13 @@ import { BadgeResult } from './BadgeResult';
 import { useTranslation } from 'react-i18next'; 
 
 export type Badge = 'ECO' | 'CERO' | 'C' | 'B' | 'SIN' | null; 
-interface VehicleCheckerProps 
-{ isFuture: boolean; isResident: boolean; cityId: string; onLabelCalculated: (badge: Badge) => void; }
+
+interface VehicleCheckerProps { 
+  isFuture: boolean; 
+  isResident: boolean; 
+  cityId: string; 
+  onLabelCalculated: (badge: Badge) => void; 
+}
 
 export const VehicleChecker = ({
   isFuture,
@@ -19,16 +24,19 @@ export const VehicleChecker = ({
   const [fuel, setFuel] = useState('');
   const [year, setYear] = useState('');
   const [month, setMonth] = useState('');
+  const [error, setError] = useState(false);
 
   const calculateBadge = () => {
     const y = parseInt(year);
     const m = parseInt(month);
 
     if (!fuel || !year || !month) {
-      alert(t('fillAllFields'));
+      setError(true);
+      setTimeout(() => setError(false), 3000);
       return;
     }
 
+    setError(false);
     let result: Badge = null;
 
     if (fuel === 'electric') result = 'CERO';
@@ -48,7 +56,7 @@ export const VehicleChecker = ({
   };
 
   return (
-    <div className="relative max-w-lg mx-auto">
+    <div className="relative w-full">
 
       <div className="absolute inset-0 bg-linear-to-r from-emerald-500/20 to-blue-500/20 blur-3xl opacity-40 rounded-3xl -z-10" />
 
@@ -65,6 +73,7 @@ export const VehicleChecker = ({
             <button
               onClick={() => {
                 setBadge(null);
+                setError(false);
                 onLabelCalculated(null);
               }}
               className="text-xs text-slate-400 hover:text-white transition-colors underline"
@@ -75,11 +84,20 @@ export const VehicleChecker = ({
         </div>
 
         <BadgeForm
-          onFuelChange={setFuel}
-          onYearChange={setYear}
-          onMonthChange={setMonth}
+          onFuelChange={(v) => { setFuel(v); setError(false); }}
+          onYearChange={(v) => { setYear(v); setError(false); }}
+          onMonthChange={(v) => { setMonth(v); setError(false); }}
           onCalculate={calculateBadge}
         />
+
+        {error && (
+          <div className="mt-4 flex items-center gap-2 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 animate-pulse">
+            <span className="text-base">⚠️</span>
+            <p className="text-xs font-bold text-red-400">
+              {t('fillAllFields')}
+            </p>
+          </div>
+        )}
 
         <BadgeResult 
           badge={badge} 

@@ -18,14 +18,15 @@ export const Header = ({ isFuture, isResident, setIsFuture, setIsResident, cityN
     <header className="bg-linear-to-r from-slate-900 via-slate-800 to-slate-900 border-b border-white/10 sticky top-0 z-1000 backdrop-blur-xl">
       <LanguageToggle variant="dark" />
       
-      <div className="max-w-7xl mx-auto px-14 py-4">
+      <div className="max-w-7xl mx-auto px-4 py-4">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          
           <div 
             onClick={() => navigate('/')}
             className="flex items-center gap-3 cursor-pointer group"
           >
             <div className="text-4xl transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-              💨
+              🌿
             </div>
             <div>
               <h1 className="text-2xl lg:text-3xl font-black bg-clip-text text-transparent bg-linear-to-r from-emerald-400 to-teal-400 group-hover:from-emerald-300 group-hover:to-teal-300 transition-all">
@@ -37,7 +38,7 @@ export const Header = ({ isFuture, isResident, setIsFuture, setIsResident, cityN
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3 lg:mr-10">
 
             <div className="flex items-center gap-2 bg-white/5 backdrop-blur-xl rounded-full px-3 py-1.5 border border-white/10">
               <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">

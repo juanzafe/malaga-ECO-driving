@@ -22,43 +22,17 @@ export const BadgeForm = ({ onFuelChange, onYearChange, onMonthChange, onCalcula
   );
 
   return (
-    <div className="space-y-5">
-      <div>
-        <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">
-          {t('fuelType')}
-        </label>
-        <select 
-          onChange={(e) => onFuelChange(e.target.value)}
-          className="w-full p-3.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl 
-                   text-white placeholder-slate-400
-                   focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 
-                   outline-none transition-all hover:bg-white/15
-                   appearance-none cursor-pointer"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'right 0.75rem center',
-            backgroundSize: '1.5em 1.5em',
-            paddingRight: '2.5rem'
-          }}
-        >
-          <option value="" className="bg-slate-800 text-slate-300">{t('selectFuel')}</option>
-          <option value="gasoline" className="bg-slate-800 text-white">⛽ {t('engineGasoline')}</option>
-          <option value="diesel" className="bg-slate-800 text-white">🛢️ {t('engineDiesel')}</option>
-          <option value="hybrid" className="bg-slate-800 text-white">⚡ {t('engineHybrid')}</option>
-          <option value="electric" className="bg-slate-800 text-white">🔋 {t('engineElectric')}</option>
-        </select>
-      </div>
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
 
-      <div className="grid grid-cols-2 gap-4 items-end">
         <div>
-          <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">
-            {t('registrationYear')}
+          <label className="block text-xs font-bold text-slate-300 mb-1.5 uppercase tracking-wider">
+            {t('fuelType')}
           </label>
           <select 
-            onChange={(e) => onYearChange(e.target.value)}
-            className="w-full p-3.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl 
-                     text-white placeholder-slate-400
+            onChange={(e) => onFuelChange(e.target.value)}
+            className="w-full p-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl 
+                     text-white text-sm
                      focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 
                      outline-none transition-all hover:bg-white/15
                      appearance-none cursor-pointer"
@@ -66,7 +40,34 @@ export const BadgeForm = ({ onFuelChange, onYearChange, onMonthChange, onCalcula
               backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'right 0.75rem center',
-              backgroundSize: '1.5em 1.5em',
+              backgroundSize: '1.2em 1.2em',
+              paddingRight: '2.5rem'
+            }}
+          >
+            <option value="" className="bg-slate-800 text-slate-300">{t('selectFuel')}</option>
+            <option value="gasoline" className="bg-slate-800 text-white">⛽ {t('engineGasoline')}</option>
+            <option value="diesel" className="bg-slate-800 text-white">🛢️ {t('engineDiesel')}</option>
+            <option value="hybrid" className="bg-slate-800 text-white">⚡ {t('engineHybrid')}</option>
+            <option value="electric" className="bg-slate-800 text-white">🔋 {t('engineElectric')}</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-xs font-bold text-slate-300 mb-1.5 uppercase tracking-wider">
+            {t('registrationYear')}
+          </label>
+          <select 
+            onChange={(e) => onYearChange(e.target.value)}
+            className="w-full p-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl 
+                     text-white text-sm
+                     focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 
+                     outline-none transition-all hover:bg-white/15
+                     appearance-none cursor-pointer"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'right 0.75rem center',
+              backgroundSize: '1.2em 1.2em',
               paddingRight: '2.5rem'
             }}
           >
@@ -78,13 +79,13 @@ export const BadgeForm = ({ onFuelChange, onYearChange, onMonthChange, onCalcula
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">
+          <label className="block text-xs font-bold text-slate-300 mb-1.5 uppercase tracking-wider">
             {t('registrationMonth')}
           </label>
           <select 
             onChange={(e) => onMonthChange(e.target.value)}
-            className="w-full p-3.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl 
-                     text-white placeholder-slate-400
+            className="w-full p-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl 
+                     text-white text-sm
                      focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 
                      outline-none transition-all hover:bg-white/15
                      appearance-none cursor-pointer"
@@ -92,7 +93,7 @@ export const BadgeForm = ({ onFuelChange, onYearChange, onMonthChange, onCalcula
               backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'right 0.75rem center',
-              backgroundSize: '1.5em 1.5em',
+              backgroundSize: '1.2em 1.2em',
               paddingRight: '2.5rem'
             }}
           >
@@ -107,19 +108,14 @@ export const BadgeForm = ({ onFuelChange, onYearChange, onMonthChange, onCalcula
       </div>
 
       <button 
-  onClick={onCalculate}
-  className="w-full bg-linear-to-r from-emerald-500 via-teal-500 to-cyan-500
-             hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600
-             text-white font-black py-4 rounded-xl
-             shadow-lg shadow-emerald-500/30
-             transition-all duration-300
-             active:scale-95 uppercase tracking-widest
-             hover:shadow-xl hover:shadow-emerald-500/40
-             transform hover:-translate-y-1"
->
-  ✨ {t('calculate')}
-</button>
-
+        onClick={onCalculate}
+        className="w-full bg-linear-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 
+                 text-white font-black py-3.5 rounded-xl shadow-lg shadow-emerald-500/30
+                 transition-all active:scale-95 uppercase tracking-wider text-sm
+                 hover:shadow-xl hover:shadow-emerald-500/40 transform hover:-translate-y-0.5"
+      >
+        ✨ {t('calculate')}
+      </button>
     </div>
   );
 };
