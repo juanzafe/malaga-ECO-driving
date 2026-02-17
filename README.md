@@ -1,7 +1,7 @@
 # 🚗 ZBE Spain Checker: Smart Zone Navigator
 A practical, interactive tool designed to help drivers navigate the Low Emission Zones (ZBE) across Spanish cities. This app translates complex environmental legislation into a simple, location-based interactive experience to help users avoid fines.
 <p align="center">
-  <img src="src/assets/Animationzb.gif" alt="ZBE España Demo" width="600">
+  <img src="src/assets/Animationzbe.gif" alt="ZBE España Demo" width="600">
 </p>
 
 ---
