@@ -58,3 +58,83 @@ describe('Lógica de Acceso ZBE Málaga', () => {
 
   });
 });
+
+describe('Lógica de Acceso ZBE Madrid', () => {
+
+  it('SIN etiqueta debe estar prohibido en todo Madrid', () => {
+    const result = checkAccess(
+      'SIN',
+      false,
+      'ZONA2',
+      false,
+      'madrid'
+    );
+
+    expect(result.allowed).toBe(false);
+    expect(result.status).toBe('prohibited');
+    expect(result.messageKey).toBe('forbiddenEverywhere');
+  });
+
+  it('ECO debe tener acceso libre', () => {
+    const result = checkAccess(
+      'ECO',
+      false,
+      'ZONA1',
+      false,
+      'madrid'
+    );
+
+    expect(result.allowed).toBe(true);
+  });
+
+  it('Etiqueta B prohibida en ZONA1', () => {
+    const result = checkAccess(
+      'B',
+      false,
+      'ZONA1',
+      false,
+      'madrid'
+    );
+
+    expect(result.allowed).toBe(false);
+  });
+
+});
+
+describe('getZoneFromCoords Madrid', () => {
+
+  it('detecta ZONA1 Madrid correctamente', () => {
+    const zone = getZoneFromCoords(
+      [40.415, -3.700],
+      'madrid'
+    );
+
+    expect(zone).toBe('ZONA1');
+  });
+
+  it('detecta ZONA2 Madrid correctamente', () => {
+    const zone = getZoneFromCoords(
+      [40.44, -3.72],
+      'madrid'
+    );
+
+    expect(zone).toBe('ZONA2');
+  });
+
+});
+
+describe('Edge cases', () => {
+
+  it('badge null siempre neutral', () => {
+    const result = checkAccess(
+      null,
+      false,
+      'ZONA1',
+      false,
+      'madrid'
+    );
+
+    expect(result.status).toBe('neutral');
+  });
+
+});
