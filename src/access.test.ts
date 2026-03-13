@@ -138,3 +138,88 @@ describe('Edge cases', () => {
   });
 
 });
+
+describe('Lógica de Acceso ZBE Valencia', () => {
+
+  it('SIN etiqueta debe estar prohibido en toda Valencia', () => {
+    const result = checkAccess(
+      'SIN',
+      false,
+      'ZONA2',
+      false,
+      'valencia'
+    );
+
+    expect(result.allowed).toBe(false);
+    expect(result.status).toBe('prohibited');
+    expect(result.messageKey).toBe('forbiddenEverywhere');
+  });
+
+  it('ECO debe tener acceso libre en Valencia', () => {
+    const result = checkAccess(
+      'ECO',
+      false,
+      'ZONA1',
+      false,
+      'valencia'
+    );
+
+    expect(result.allowed).toBe(true);
+  });
+
+  it('Etiqueta B prohibida en ZONA1 Valencia', () => {
+    const result = checkAccess(
+      'B',
+      false,
+      'ZONA1',
+      false,
+      'valencia'
+    );
+
+    expect(result.allowed).toBe(false);
+  });
+
+  it('Residente siempre permitido en Valencia', () => {
+    const result = checkAccess(
+      'SIN',
+      false,
+      'ZONA1',
+      true,
+      'valencia'
+    );
+
+    expect(result.allowed).toBe(true);
+  });
+
+});
+
+describe('getZoneFromCoords Valencia', () => {
+
+  it('detecta ZONA1 Valencia (Ciutat Vella) correctamente', () => {
+    const zone = getZoneFromCoords(
+      [39.4760, -0.3780],
+      'valencia'
+    );
+
+    expect(zone).toBe('ZONA1');
+  });
+
+  it('detecta ZONA2 Valencia correctamente', () => {
+    const zone = getZoneFromCoords(
+      [39.490, -0.390],
+      'valencia'
+    );
+
+    expect(zone).toBe('ZONA2');
+  });
+
+  it('detecta OUTSIDE Valencia correctamente', () => {
+    const zone = getZoneFromCoords(
+      [39.550, -0.500],
+      'valencia'
+    );
+
+    expect(zone).toBe('OUTSIDE');
+  });
+
+});

@@ -46,6 +46,20 @@ const BARCELONA_ZONA_2: LatLngTuple[] = [
   [41.4100, 2.1380], [41.4150, 2.1400]
 ];
 
+const VALENCIA_ZONA_1: LatLngTuple[] = [
+  [39.4785, -0.3820], [39.4800, -0.3785], [39.4790, -0.3740],
+  [39.4765, -0.3720], [39.4740, -0.3735], [39.4730, -0.3770],
+  [39.4740, -0.3810], [39.4765, -0.3825]
+];
+
+const VALENCIA_ZONA_2: LatLngTuple[] = [
+  [39.5000, -0.4050], [39.5020, -0.3900], [39.5010, -0.3700],
+  [39.4950, -0.3500], [39.4850, -0.3400], [39.4700, -0.3350],
+  [39.4550, -0.3400], [39.4450, -0.3550], [39.4430, -0.3700],
+  [39.4450, -0.3900], [39.4530, -0.4050], [39.4650, -0.4100],
+  [39.4800, -0.4100], [39.4900, -0.4080]
+];
+
 export const CITIES = {
   malaga: {
     id: 'malaga',
@@ -75,6 +89,16 @@ export const CITIES = {
     polygons: {
       zona1: BARCELONA_ZONA_1,
       zona2: BARCELONA_ZONA_2
+    }
+  },
+  valencia: {
+    id: 'valencia',
+    name: 'València',
+    coords: [39.4699, -0.3763] as LatLngTuple,
+    zoom: 13,
+    polygons: {
+      zona1: VALENCIA_ZONA_1,
+      zona2: VALENCIA_ZONA_2
     }
   }
 };

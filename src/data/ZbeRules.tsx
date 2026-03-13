@@ -34,6 +34,15 @@ export const checkAccess = (
     return { allowed: false, status: 'prohibited', messageKey: 'forbiddenEverywhere', color: '#dc2626', icon: '⛔' };
   }
 
+  if (cityId === 'valencia' && badge === 'SIN') {
+    if (!isResident) {
+      return { allowed: false, status: 'prohibited', messageKey: 'forbiddenEverywhere', color: '#dc2626', icon: '⛔' };
+    }
+    if (isResident && isFuture) {
+      return { allowed: false, status: 'prohibited', messageKey: 'forbiddenEverywhere', color: '#dc2626', icon: '⛔' };
+    }
+  }
+
   if (isResident || badge === 'CERO' || badge === 'ECO') {
     return { 
       allowed: true,
@@ -104,6 +113,13 @@ export const getZoneFromCoords = (coords: [number, number], cityId: string): 'ZO
     const isInsideZ1 = lat > 41.387 && lat < 41.401 && lng > 2.164 && lng < 2.196;
     if (isInsideZ1) return 'ZONA1';
     const isInsideZ2 = lat > 41.374 && lat < 41.425 && lng > 2.131 && lng < 2.221;
+    if (isInsideZ2) return 'ZONA2';
+  }
+
+  if (cityId === 'valencia') {
+    const isInsideZ1 = lat > 39.473 && lat < 39.481 && lng > -0.383 && lng < -0.372;
+    if (isInsideZ1) return 'ZONA1';
+    const isInsideZ2 = lat > 39.443 && lat < 39.502 && lng > -0.410 && lng < -0.335;
     if (isInsideZ2) return 'ZONA2';
   }
   

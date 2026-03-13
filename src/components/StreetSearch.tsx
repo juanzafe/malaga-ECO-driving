@@ -20,13 +20,15 @@ interface NominatimResult {
 const CITY_BOUNDS: Record<string, string> = {
   malaga: '-4.5539,36.7845,-4.3005,36.6596',
   madrid: '-3.8882,40.5868,-3.5179,40.3119',
-  barcelona: '2.0536,41.4695,2.2280,41.3200'
+  barcelona: '2.0536,41.4695,2.2280,41.3200',
+  valencia: '-0.4500,39.5200,-0.3000,39.4100'
 };
 
 const CITY_NAMES: Record<string, string> = {
   malaga: 'Málaga',
   madrid: 'Madrid',
-  barcelona: 'Barcelona'
+  barcelona: 'Barcelona',
+  valencia: 'Valencia'
 };
 
 export const StreetSearch = ({ onStreetSelected, cityId }: Props) => {
