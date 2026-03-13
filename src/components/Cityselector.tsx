@@ -43,6 +43,15 @@ export const CitySelector = () => {
       image: 'https://images.unsplash.com/photo-1583422409516-2895a77efded?w=800&q=80',
       description: t('citySelector.barcelonaDesc'),
       stats: t('citySelector.barcelonaStats')
+    },
+    {
+      id: 'valencia',
+      name: 'València',
+      icon: '🍊',
+      gradient: 'from-orange-500 via-amber-500 to-yellow-500',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Ciutat_de_les_Arts_i_les_Ci%C3%A8ncies.jpg/960px-Ciutat_de_les_Arts_i_les_Ci%C3%A8ncies.jpg',
+      description: t('citySelector.valenciaDesc'),
+      stats: t('citySelector.valenciaStats')
     }
   ];
 
@@ -97,7 +106,7 @@ export const CitySelector = () => {
 
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-24">
           {cities.map((city, idx) => (
             <button
               key={city.id}
